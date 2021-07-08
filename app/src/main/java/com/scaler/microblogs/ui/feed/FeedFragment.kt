@@ -7,11 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.scaler.microblogs.R
 import com.scaler.microblogs.adapters.PostAdapter
 import com.scaler.microblogs.databinding.FragmentFeedBinding
-import dagger.hilt.android.AndroidEntryPoint
+ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FeedFragment : Fragment() {

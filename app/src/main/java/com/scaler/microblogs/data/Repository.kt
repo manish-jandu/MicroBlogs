@@ -23,4 +23,13 @@ class Repository @Inject constructor(private val api: ConduitApi) {
 
     suspend fun getTags() = api.getTags()
 
+      fun getFeedByTag(tag:String) =  Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            maxSize = 100,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { FeedPagingSource(api,tag)}
+    ).liveData
+
 }

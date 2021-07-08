@@ -64,5 +64,9 @@ interface ConduitApi {
     @GET("tags")
     suspend fun getTags(): TagsResponse
 
-
+    @GET("articles")
+    suspend fun getFeedArticlesByTag(
+        @Query("limit") limit:Int,
+        @Query("tag") tag:String,
+    ): MultipleArticleResponse
 }

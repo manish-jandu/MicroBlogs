@@ -1,4 +1,4 @@
-package com.scaler.microblogs.ui.feed
+package com.scaler.microblogs.ui.tagsFeed
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,14 +12,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class FeedViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
+class TagsFeedViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
     // TODO: Implement the ViewModel
      lateinit var articleByTag: LiveData<PagingData<Article>>
 
-    val articles = repo.getFeeds().cachedIn(viewModelScope)
 
     fun getArticlesByTag(tag: String) {
-        articleByTag = repo.getFeedByTag(tag)
+        articleByTag = repo.getFeedByTag(tag).cachedIn(viewModelScope)
     }
 
 
