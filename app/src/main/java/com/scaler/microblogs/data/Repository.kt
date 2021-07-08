@@ -21,4 +21,6 @@ class Repository @Inject constructor(private val api: ConduitApi) {
             pagingSourceFactory = { FeedPagingSource(api)}
         ).liveData
 
+    suspend fun getTags() = api.getTags()
+
 }

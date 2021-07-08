@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.tags.TagsFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="tags" />
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_tags"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 </FrameLayout>
