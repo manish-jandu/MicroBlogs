@@ -1,6 +1,7 @@
 package com.scaler.microblogs.di
 
 import com.scaler.libconduit.apis.ConduitApi
+import com.scaler.microblogs.data.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,4 +34,8 @@ object MainModule {
     @Singleton
     fun providesApi(retrofit: Retrofit) =
         retrofit.create(ConduitApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesRepository(api: ConduitApi) = Repository(api)
 }
