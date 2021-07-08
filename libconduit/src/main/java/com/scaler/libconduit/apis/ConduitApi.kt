@@ -31,10 +31,14 @@ interface ConduitApi {
     suspend fun unfollowUser(@Path("username") username: String): ProfileResponse
 
     @GET("articles")
-    suspend fun getArticles(): MultipleArticleResponse
+    suspend fun getArticles(
+        @Query("limit") limit:Int
+    ): MultipleArticleResponse
 
     @GET("articles/feed")
-    suspend fun getFeedArticles(): MultipleArticleResponse
+    suspend fun getFeedArticles(
+        @Query("limit") limit:Int
+    ): MultipleArticleResponse
 
     @GET("articles/{slug}")
     suspend fun getArticleBySlug(

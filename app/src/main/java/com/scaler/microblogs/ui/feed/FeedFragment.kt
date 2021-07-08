@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentFeedBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
 
     private lateinit var feedViewModel: FeedViewModel

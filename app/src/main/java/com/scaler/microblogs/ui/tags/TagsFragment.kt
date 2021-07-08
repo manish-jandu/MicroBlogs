@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.scaler.microblogs.databinding.FragmentTagsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TagsFragment : Fragment() {
 
     private lateinit var tagsViewModel: TagsViewModel

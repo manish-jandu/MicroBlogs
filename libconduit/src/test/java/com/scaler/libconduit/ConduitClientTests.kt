@@ -14,4 +14,9 @@ class ConduitClientTests {
         val response = api.getTags()
         assertNotNull(response)
     }
+    @Test
+    fun getArticles() = runBlocking {
+        val response = api.getArticles(30)
+        assertNotNull(response)
+    }
 }
