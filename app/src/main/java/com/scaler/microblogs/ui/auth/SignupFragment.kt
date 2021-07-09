@@ -1,12 +1,9 @@
 package com.scaler.microblogs.ui.auth
 
-import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +24,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
     private val binding get() = _binding!!
     private var isProgressBarVisible: Boolean = false
 
+    @SuppressLint("CommitPrefEdits")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSignupBinding.bind(view)
@@ -47,7 +45,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 toggleProgressBar()
                 Log.i("SignupFragment", "onViewCreated: ${it.token}")
                 AuthModule.authToken = it.token
-                //Todo:set Token in datastore
+                viewModel.setNewUserToken(it.token!!)
                 findNavController().navigateUp()
             }
         }

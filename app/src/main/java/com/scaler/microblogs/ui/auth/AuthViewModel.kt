@@ -1,12 +1,12 @@
 package com.scaler.microblogs.ui.auth
 
-import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.scaler.libconduit.models.User
 import com.scaler.libconduit.responses.UserResponse
+import com.scaler.microblogs.data.AppPrefStorage
 import com.scaler.microblogs.data.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -16,7 +16,10 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
+class AuthViewModel @Inject constructor(
+    private val repo: Repository,
+    private val appPrefStorage: AppPrefStorage
+) : ViewModel() {
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user
 
@@ -91,6 +94,10 @@ class AuthViewModel @Inject constructor(private val repo: Repository) : ViewMode
             authEventChannel.send(AuthEvent.ErrorInLoginOrSignUp)
             false
         }
+    }
+
+    fun setNewUserToken(token: String) {
+        appPrefStorage.setUserToken(token)
     }
 
 

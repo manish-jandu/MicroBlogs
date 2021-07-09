@@ -1,5 +1,6 @@
 package com.scaler.microblogs.di
 
+
 import com.scaler.libconduit.apis.ConduitApi
 import com.scaler.microblogs.data.Repository
 import dagger.Module
@@ -51,4 +52,4 @@ object MainModule {
     ) = Repository(api)
 
 
-}
+ }

@@ -1,7 +1,6 @@
 package com.scaler.microblogs.ui.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,6 +21,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private val binding get() = _binding!!
     private var isProgressBarVisible: Boolean = false
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLoginBinding.bind(view)
@@ -39,7 +39,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             it?.let {
                 toggleProgressBar()
                 AuthModule.authToken = it.token
-                //Todo:set Token in datastore
+                viewModel.setNewUserToken(it.token!!)
                 findNavController().navigateUp()
             }
         }

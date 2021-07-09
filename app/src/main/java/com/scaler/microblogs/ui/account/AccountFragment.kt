@@ -1,10 +1,12 @@
 package com.scaler.microblogs.ui.account
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.scaler.microblogs.databinding.FragmentAccountBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -12,12 +14,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AccountFragment : Fragment() {
 
-    private lateinit var accountViewModel: AccountViewModel
+    private val accountViewModel: AccountViewModel by viewModels()
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
 
     companion object {
         fun newInstance() = AccountFragment()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        accountViewModel.getUserToken()
     }
 
     override fun onCreateView(
@@ -27,9 +34,6 @@ class AccountFragment : Fragment() {
     ): View {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
 
-        //if(data available in jetpack) unitl checking show progressbar
-        //show user screen
-        //else show 2 button login and signup
         binding.buttonLogin.setOnClickListener {
             val action = AccountFragmentDirections.actionNavAccountToLoginFragment()
             findNavController().navigate(action)
@@ -38,6 +42,20 @@ class AccountFragment : Fragment() {
             val action = AccountFragmentDirections.actionNavAccountToSignupFragment()
             findNavController().navigate(action)
         }
+
+        accountViewModel.userToken.observe(viewLifecycleOwner) {
+            if (it.isNullOrEmpty()) {
+
+            } else {
+                binding.apply {
+                    textViewPleaseLoginSignUp.visibility = View.GONE
+                    buttonLogin.visibility = View.GONE
+                    buttonSignup.visibility = View.GONE
+                }
+                Log.i("AccountFragment", "onCreateView: new token is $it")
+            }
+        }
+
 
         return binding.root
     }
@@ -48,3 +66,4 @@ class AccountFragment : Fragment() {
     }
 
 }
+
