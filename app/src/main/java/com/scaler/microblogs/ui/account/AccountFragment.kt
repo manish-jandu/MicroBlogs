@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.scaler.microblogs.databinding.FragmentAccountBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,6 +30,14 @@ class AccountFragment : Fragment() {
         //if(data available in jetpack) unitl checking show progressbar
         //show user screen
         //else show 2 button login and signup
+        binding.buttonLogin.setOnClickListener {
+            val action = AccountFragmentDirections.actionNavAccountToLoginFragment()
+            findNavController().navigate(action)
+        }
+        binding.buttonSignup.setOnClickListener {
+            val action = AccountFragmentDirections.actionNavAccountToSignupFragment()
+            findNavController().navigate(action)
+        }
 
         return binding.root
     }

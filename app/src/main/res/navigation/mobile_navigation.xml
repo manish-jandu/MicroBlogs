@@ -25,7 +25,14 @@
             android:id="@+id/nav_account"
             android:name="com.scaler.microblogs.ui.account.AccountFragment"
             android:label="@string/title_account"
-            tools:layout="@layout/fragment_account" />
+            tools:layout="@layout/fragment_account" >
+        <action
+                android:id="@+id/action_nav_account_to_loginFragment"
+                app:destination="@id/loginFragment" />
+        <action
+                android:id="@+id/action_nav_account_to_signupFragment"
+                app:destination="@id/signupFragment" />
+    </fragment>
     <fragment
             android:id="@+id/tagsFeedFragment"
             android:name="com.scaler.microblogs.ui.tagsFeed.TagsFeedFragment"
@@ -38,11 +45,11 @@
     <fragment
             android:id="@+id/loginFragment"
             android:name="com.scaler.microblogs.ui.auth.LoginFragment"
-            android:label="fragment_login"
+            android:label="Login"
             tools:layout="@layout/fragment_login" />
     <fragment
             android:id="@+id/signupFragment"
             android:name="com.scaler.microblogs.ui.auth.SignupFragment"
-            android:label="fragment_signup"
+            android:label="Sign up"
             tools:layout="@layout/fragment_signup" />
 </navigation>
