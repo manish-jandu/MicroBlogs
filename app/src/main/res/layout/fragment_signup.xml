@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.auth.SignupFragment">
+
+    <EditText
+            android:id="@+id/edit_text_signup_username"
+            android:inputType="text"
+            android:textAlignment="center"
+            android:hint="username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <EditText
+            android:id="@+id/edit_text_signup_email"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:hint="email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <EditText
+            android:id="@+id/edit_text_signup_password"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:hint="password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_submit_signup"
+            android:text="Login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
-    // TODO: Implement the ViewModel
      lateinit var articleByTag: LiveData<PagingData<Article>>
 
     val articles = repo.getFeeds().cachedIn(viewModelScope)

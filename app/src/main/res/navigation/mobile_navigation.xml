@@ -35,4 +35,14 @@
                 android:name="tag"
                 app:argType="string" />
     </fragment>
+    <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.scaler.microblogs.ui.auth.LoginFragment"
+            android:label="fragment_login"
+            tools:layout="@layout/fragment_login" />
+    <fragment
+            android:id="@+id/signupFragment"
+            android:name="com.scaler.microblogs.ui.auth.SignupFragment"
+            android:label="fragment_signup"
+            tools:layout="@layout/fragment_signup" />
 </navigation>

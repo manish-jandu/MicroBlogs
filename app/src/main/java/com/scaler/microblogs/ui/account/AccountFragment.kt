@@ -26,6 +26,10 @@ class AccountFragment : Fragment() {
     ): View {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
 
+        //if(data available in jetpack) unitl checking show progressbar
+        //show user screen
+        //else show 2 button login and signup
+
         return binding.root
     }
 
