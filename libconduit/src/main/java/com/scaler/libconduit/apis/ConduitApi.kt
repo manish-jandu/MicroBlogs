@@ -15,28 +15,8 @@ interface ConduitApi {
     @POST("users")
     suspend fun registerUser(@Body userSignupRequest: UserSignupRequest): UserResponse
 
-    @GET("user")
-    suspend fun getCurrentUser(): UserResponse
-
-    @PUT("user")
-    suspend fun updateUserDetails(@Body userUpdateRequest: UserUpdateRequest): UserResponse
-
-    @GET("profiles/{username}")
-    suspend fun getProfileByUsername(@Path("username") username: String): ProfileResponse
-
-    @POST("profiles/{username}/follow")
-    suspend fun followUser(@Path("username") username: String): ProfileResponse
-
-    @DELETE("profiles/{username}/follow")
-    suspend fun unfollowUser(@Path("username") username: String): ProfileResponse
-
     @GET("articles")
     suspend fun getArticles(
-        @Query("limit") limit:Int
-    ): MultipleArticleResponse
-
-    @GET("articles/feed")
-    suspend fun getFeedArticles(
         @Query("limit") limit:Int
     ): MultipleArticleResponse
 
@@ -44,22 +24,6 @@ interface ConduitApi {
     suspend fun getArticleBySlug(
         @Path("slug") slug: String
     ): SingleArticleResponse
-
-    @POST("articles")
-    suspend fun createArticle(
-        @Body createArticleRequest: CreateArticleRequest
-    ): SingleArticleResponse
-
-    @PUT("articles/{slug}")
-    suspend fun updateArticle(
-        @Path("slug") slug: String,
-        @Body createArticleRequest: CreateArticleRequest
-    ): SingleArticleResponse
-
-    @DELETE("articles/{slug}")
-    suspend fun deleteArticle(
-        @Path("slug") slug: String,
-    ): Void
 
     @GET("tags")
     suspend fun getTags(): TagsResponse

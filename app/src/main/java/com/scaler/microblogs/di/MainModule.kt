@@ -9,20 +9,26 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object MainModule {
 
+    var authToken: String? = null
+
     @Provides
     @Singleton
-    fun providesOkHttpClient() = OkHttpClient.Builder()
+    @Named("publicOkHttpClient")
+    fun providesPublicOkHttpClient() = OkHttpClient.Builder()
         .build()
 
     @Provides
     @Singleton
-    fun provideRetrofit(
+    @Named("publicRetrofit")
+    fun providesPublicRetrofit(
+        @Named("publicOkHttpClient")
         okHttpClient: OkHttpClient
     ) = Retrofit.Builder()
         .client(okHttpClient)
@@ -32,10 +38,17 @@ object MainModule {
 
     @Provides
     @Singleton
-    fun providesApi(retrofit: Retrofit) =
+    fun providesApi(
+        @Named("publicRetrofit")
+        retrofit: Retrofit
+    ) =
         retrofit.create(ConduitApi::class.java)
 
     @Provides
     @Singleton
-    fun providesRepository(api: ConduitApi) = Repository(api)
+    fun providesRepository(
+        api: ConduitApi
+    ) = Repository(api)
+
+
 }
