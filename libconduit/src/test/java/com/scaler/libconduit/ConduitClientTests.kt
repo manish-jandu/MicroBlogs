@@ -16,7 +16,7 @@ class ConduitClientTests {
     private val authApi: ConduitAuthApi = ConduitClient.authApi
     val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTgyMTg4LCJ1c2VybmFtZSI6InRlc3Q5OTk3IiwiZXhwIjoxNjMxMDEwODM0fQ.93GW0LnrJ5ADIk31UPHQrWJr4NATUGHFx-w76J4fjlo"
 
-    val email:String = "test9997@test.com"
+    val email:String = "test9997test.com"
     val password:String = "test9997@test.com"
     val userName :String = "test9997"
 
@@ -36,13 +36,16 @@ class ConduitClientTests {
     fun signup() = runBlocking {
         val response = api.registerUser(UserSignupRequest(UserSignupData(email,password,userName)))
         print(response)
-        assertNotNull(response)
+        print(response.code())
+        response.raw()
+        response.message()
+        assertNotNull(response.isSuccessful)
     }
 
     @Test
     fun login() = runBlocking {
         val response = api.loginUser(UserLoginRequest(UserLoginData(email,password)))
-        ConduitClient.authToken = response.user!!.token
+        ConduitClient.authToken = response.body()!!.user!!.token
         assertNotNull(response)
     }
 

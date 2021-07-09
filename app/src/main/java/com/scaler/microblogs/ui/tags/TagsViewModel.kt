@@ -18,7 +18,7 @@ class TagsViewModel @Inject constructor(
 
     fun getTags() = viewModelScope.launch {
         val result = repo.getTags()
-        result.tags?.let {
+        result.body()!!.tags?.let {
             _tags.postValue(it)
         }
     }

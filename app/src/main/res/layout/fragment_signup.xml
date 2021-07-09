@@ -35,8 +35,15 @@
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/button_submit_signup"
-            android:text="Login"
+            android:text="Sign up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_circular_sign_up"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center" />
 
 </LinearLayout>

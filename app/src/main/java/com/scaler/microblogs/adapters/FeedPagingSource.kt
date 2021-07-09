@@ -20,7 +20,7 @@ class FeedPagingSource(
             if(tag.isNullOrEmpty()){
                 //get simple global feed
                 val response = api.getArticles(params.loadSize)
-                val articles = response.articles
+                val articles = response.body()!!.articles
                 LoadResult.Page(
                     data = articles!!,
                     prevKey = if (position == FEED_STARTING_INDEX) null else position - 1,
@@ -29,7 +29,7 @@ class FeedPagingSource(
             }else{
                 //get feed by tags
                 val response = api.getFeedArticlesByTag(params.loadSize,tag)
-                val articles = response.articles
+                val articles = response.body()!!.articles
                 LoadResult.Page(
                     data = articles!!,
                     prevKey = if (position == FEED_STARTING_INDEX) null else position - 1,
