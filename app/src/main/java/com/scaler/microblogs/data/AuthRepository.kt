@@ -29,4 +29,5 @@ class AuthRepository() {
 
     suspend fun createComment(slug:String,body: String) = api.createComment(slug, CreateComment(body))
 
+    suspend fun likeUnlike(slug: String) = api.likeUnlikeArticle(slug)
 }

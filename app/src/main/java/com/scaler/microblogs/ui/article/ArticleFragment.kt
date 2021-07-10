@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.scaler.microblogs.R
 import com.scaler.microblogs.adapters.CommentsAdapter
@@ -30,6 +31,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
     private val args: ArticleFragmentArgs by navArgs()
+    private var isFavourite: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,6 +74,9 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             buttonComment.setOnClickListener {
                 createComment(slug)
             }
+            viewLikeButton.setOnClickListener {
+                articleViewModel.setLikeUnlikeArticle(slug)
+            }
         }
 
         articleViewModel.article.observe(viewLifecycleOwner) {
@@ -79,6 +84,10 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                 binding.apply {
                     textViewTitle.text = it.title
                     textViewBody.text = it.body
+                    it.favorited?.let {
+                        isFavourite = it
+                        setFavourite(isFavourite)
+                    }
                 }
             }
         }
@@ -95,6 +104,10 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                         findNavController().navigateUp()
                         Toast.makeText(requireContext(), "Try Again!", Toast.LENGTH_SHORT).show()
                     }
+                    is ArticleViewModel.ArticleEvent.LikeUnlike -> {
+                        isFavourite = !isFavourite
+                        setFavourite(isFavourite)
+                    }
                 }
             }
         }
@@ -107,6 +120,20 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             }
         }
 
+    }
+
+    private fun setFavourite(isFavourite: Boolean?) {
+        if (isFavourite == true) {
+            Glide.with(binding.imageLikeUnlike)
+                .load(R.drawable.ic_liked)
+                .centerCrop()
+                .into(binding.imageLikeUnlike)
+        } else {
+            Glide.with(binding.imageLikeUnlike)
+                .load(R.drawable.ic_unliked)
+                .centerCrop()
+                .into(binding.imageLikeUnlike)
+        }
     }
 
     private fun createComment(slug: String) {

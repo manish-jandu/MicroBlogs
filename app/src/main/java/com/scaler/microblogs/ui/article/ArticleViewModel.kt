@@ -53,12 +53,21 @@ class ArticleViewModel @Inject constructor(
 
     fun createComment(slug: String, body: String) = viewModelScope.launch {
         val result = authRepo.createComment(slug, body)
-        if (result.isSuccessful){
+        if (result.isSuccessful) {
             getComments(slug)
+        }
+    }
+
+    fun setLikeUnlikeArticle(slug: String) = viewModelScope.launch {
+        val result = authRepo.likeUnlike(slug)
+        if (result.isSuccessful) {
+            getArticleData(slug)
+            articleEventChannel.send(ArticleEvent.LikeUnlike)
         }
     }
 
     sealed class ArticleEvent {
         object Error : ArticleEvent()
+        object LikeUnlike:ArticleEvent()
     }
 }

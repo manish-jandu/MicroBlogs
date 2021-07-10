@@ -4,7 +4,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="5dp">
 
     <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -40,7 +42,8 @@
             android:text="This is to give basic idea how will the description look in reality."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
+            android:maxLines="1"
+            android:textStyle="bold"
             android:ellipsize="end"
             android:layout_marginTop="8dp"
             android:textSize="14sp"
@@ -48,6 +51,18 @@
             android:layout_marginStart="66dp"
             app:layout_constraintStart_toEndOf="@+id/cardView"
             app:layout_constraintTop_toBottomOf="@+id/text_view_user_name" />
+    <TextView
+            android:id="@+id/text_view_body"
+            android:text="This is to give basic idea how will the description look in reality."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:layout_marginStart="66dp"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_description" />
 
     <TextView
             android:id="@+id/text_view_time"

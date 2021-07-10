@@ -1,5 +1,6 @@
 package com.scaler.libconduit.apis
 
+import com.scaler.libconduit.models.Article
 import com.scaler.libconduit.models.Comment
 import com.scaler.libconduit.requests.CreateArticleRequest
 import com.scaler.libconduit.requests.CreateComment
@@ -57,4 +58,9 @@ interface ConduitAuthApi {
         @Body createComment: CreateComment
     ): Response<Comment>
 
+
+    @POST("articles/{slug}/favorite")
+    suspend fun likeUnlikeArticle(
+        @Path("slug") slug: String,
+    ): Response<Article>
 }
