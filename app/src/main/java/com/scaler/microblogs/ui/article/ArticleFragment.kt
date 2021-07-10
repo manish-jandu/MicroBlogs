@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,8 @@ import androidx.navigation.fragment.navArgs
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentArticleBinding
 import com.scaler.microblogs.utils.ArticleType
+import com.scaler.microblogs.utils.Constants.EDITED_ARTICLE
+import com.scaler.microblogs.utils.Constants.FRAGMENT_ADD_EDIT_RESULT_REQUEST_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -52,7 +55,8 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                 showDialog(slug)
             }
             buttonEditArticle.setOnClickListener {
-
+                val action = ArticleFragmentDirections.actionArticleFragmentToAddEditArticleFragment(slug)
+                findNavController().navigate(action)
             }
         }
 
@@ -72,6 +76,14 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                         Toast.makeText(requireContext(),"Try Again!",Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
+        }
+        //refresh
+        setFragmentResultListener(FRAGMENT_ADD_EDIT_RESULT_REQUEST_KEY){_,bundle->
+            val result =bundle.getBoolean(EDITED_ARTICLE)
+            if(result){
+                findNavController().navigateUp()
+                Toast.makeText(requireContext(),"Article Updated",Toast.LENGTH_SHORT).show()
             }
         }
 
