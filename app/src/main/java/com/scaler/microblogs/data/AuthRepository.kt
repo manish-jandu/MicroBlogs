@@ -24,5 +24,9 @@ class AuthRepository() {
 
     suspend fun createArticle(
         title: String, description: String, body: String, tagList: List<String>
-    ) = api.createArticle(CreateArticleRequest(ArticleData(body,description,tagList,title)))
+    ) = api.createArticle(CreateArticleRequest(ArticleData(body, description, tagList, title)))
+
+    suspend fun deleteArticle(slug: String) {
+        api.deleteArticle(slug)
+    }
 }

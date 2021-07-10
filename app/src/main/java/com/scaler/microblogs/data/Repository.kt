@@ -74,5 +74,6 @@ class Repository @Inject constructor(
     suspend fun login(email: String, password: String) =
         api.loginUser(UserLoginRequest(UserLoginData(email, password)))
 
+    suspend fun getArticleBySlug(slug:String) = api.getArticleBySlug(slug)
 
 }

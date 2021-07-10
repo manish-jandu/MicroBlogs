@@ -33,36 +33,29 @@
 
     <TextView
             android:id="@+id/text_view_title"
-            android:text="Title"
+            android:text=""
             android:layout_width="match_parent"
             android:layout_marginHorizontal="16dp"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textStyle="bold"
             android:layout_marginTop="34dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_edit_article" />
 
     <TextView
-            android:id="@+id/text_view_description"
-            android:text="This is description"
+            android:id="@+id/text_view_body"
+            android:text=""
             android:layout_width="match_parent"
             android:layout_marginHorizontal="16dp"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textStyle="bold"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
-
-    <TextView
-            android:id="@+id/text_view_body"
-            android:text="this is body"
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="16dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_description" />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_comments"
@@ -87,7 +80,7 @@
 
     <Button
             android:id="@+id/button_comment"
-            android:text="Button"
+            android:text="Comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"

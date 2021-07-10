@@ -3,13 +3,18 @@ package com.scaler.microblogs.ui.article
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentArticleBinding
 import com.scaler.microblogs.utils.ArticleType
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 private const val TAG = "ArticleFragment"
 
@@ -27,6 +32,8 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         val articleType = args.articleType
         val slug = args.slug
 
+        articleViewModel.getArticleData(slug)
+
         Log.i(TAG, "onViewCreated: type $articleType")
         Log.i(TAG, "onViewCreated: slug $slug")
 
@@ -40,6 +47,50 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             }
         }
 
+        binding.apply {
+            buttonDeleteArticle.setOnClickListener {
+                showDialog(slug)
+            }
+            buttonEditArticle.setOnClickListener {
+
+            }
+        }
+
+        articleViewModel.article.observe(viewLifecycleOwner){
+            it?.let {
+                binding.apply {
+                    textViewTitle.text = it.title
+                    textViewBody.text = it.body
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            articleViewModel.articleEvent.collect {event->
+                when(event){
+                    is ArticleViewModel.ArticleEvent.Error ->{
+                        findNavController().navigateUp()
+                        Toast.makeText(requireContext(),"Try Again!",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun showDialog(slug: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Alert!")
+            .setMessage("Do you really want to delete this Article")
+            .setPositiveButton("Delete") { _, _ ->
+                articleViewModel.deleteArticle(slug)
+                findNavController().navigateUp()
+                Toast.makeText(requireContext(),"Article deleted",Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("No") { _, _ ->
+
+            }
+            .create()
+            .show()
     }
 
     override fun onDestroyView() {
