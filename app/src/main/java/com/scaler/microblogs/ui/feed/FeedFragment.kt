@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.scaler.microblogs.adapters.ArticleAdapter
@@ -52,6 +53,10 @@ class FeedFragment : Fragment() {
         val myFeed = tabsLayout.getTabAt(0)
         val globalFeed = tabsLayout.getTabAt(1)
 
+        binding.floatingButtonAddArticle.setOnClickListener {
+            val action = FeedFragmentDirections.actionNavFeedToAddEditArticleFragment()
+            findNavController().navigate(action)
+        }
 
         feedViewModel.globalArticles.observe(viewLifecycleOwner) {
             globalAdapter.submitData(viewLifecycleOwner.lifecycle, it)

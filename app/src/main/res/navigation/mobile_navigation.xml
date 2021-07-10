@@ -9,7 +9,11 @@
             android:id="@+id/nav_feed"
             android:name="com.scaler.microblogs.ui.feed.FeedFragment"
             android:label="@string/title_feed"
-            tools:layout="@layout/fragment_feed" />
+            tools:layout="@layout/fragment_feed" >
+        <action
+                android:id="@+id/action_nav_feed_to_addEditArticleFragment"
+                app:destination="@id/addEditArticleFragment" />
+    </fragment>
 
     <fragment
             android:id="@+id/nav_tags"
@@ -60,4 +64,9 @@
             android:name="com.scaler.microblogs.ui.editProfile.EditProfileFragment"
             android:label="Edit Profile"
             tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+            android:id="@+id/addEditArticleFragment"
+            android:name="com.scaler.microblogs.ui.addEditArticle.AddEditArticleFragment"
+            android:label="Article"
+            tools:layout="@layout/fragment_add_edit_article" />
 </navigation>
