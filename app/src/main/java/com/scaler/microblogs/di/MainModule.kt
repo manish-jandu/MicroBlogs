@@ -2,6 +2,7 @@ package com.scaler.microblogs.di
 
 
 import com.scaler.libconduit.apis.ConduitApi
+import com.scaler.microblogs.data.AuthRepository
 import com.scaler.microblogs.data.Repository
 import dagger.Module
 import dagger.Provides
@@ -51,5 +52,6 @@ object MainModule {
         api: ConduitApi
     ) = Repository(api)
 
-
+    @Provides
+    fun providesAuthRepository() = AuthRepository()
  }

@@ -14,11 +14,11 @@ class ConduitClientTests {
 
     private val api: ConduitApi = ConduitClient.publicApi
     private val authApi: ConduitAuthApi = ConduitClient.authApi
-    val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTgyMTg4LCJ1c2VybmFtZSI6InRlc3Q5OTk3IiwiZXhwIjoxNjMxMDEwODM0fQ.93GW0LnrJ5ADIk31UPHQrWJr4NATUGHFx-w76J4fjlo"
+    var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTgyMjA2LCJ1c2VybmFtZSI6InRlc3Q5OTk2IiwiZXhwIjoxNjMxMDMzMDE5fQ.8sJ_ZeJs9Thm-RSetGMHuOTF_xiqiqQCjCVMnzuTf5I"
 
-    val email:String = "test9997test.com"
-    val password:String = "test9997@test.com"
-    val userName :String = "test9997"
+    val email:String = "test9996@test.com"
+    val password:String = "test9996"
+    val userName :String = "test9996"
 
     @Test
     fun getTags() = runBlocking {
@@ -45,7 +45,6 @@ class ConduitClientTests {
     @Test
     fun login() = runBlocking {
         val response = api.loginUser(UserLoginRequest(UserLoginData(email,password)))
-        ConduitClient.authToken = response.body()!!.user!!.token
         assertNotNull(response)
     }
 
@@ -53,7 +52,9 @@ class ConduitClientTests {
     fun getFeedArticles() = runBlocking {
         ConduitClient.authToken = token
         val response = authApi.getCurrentUser()
-        assertNotNull(response)
+        assertNotNull(response.body())
     }
+
+
 
 }

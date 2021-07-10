@@ -37,7 +37,7 @@
 
     <TextView
             android:id="@+id/text_view_description"
-            android:text="This is to give basic idea how will the description look in reality.This is a description.This is a description.This is a description."
+            android:text="This is to give basic idea how will the description look in reality."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"

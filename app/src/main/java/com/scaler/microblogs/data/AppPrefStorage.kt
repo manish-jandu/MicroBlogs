@@ -23,4 +23,8 @@ class AppPrefStorage @Inject constructor(@ApplicationContext context: Context) {
         sharedPref.edit().putString(PREF_NAME, token).apply()
     }
 
+    @SuppressLint("CommitPrefEdits")
+    fun deleteToken(){
+        sharedPref.edit().remove(PREF_NAME).apply()
+    }
 }
