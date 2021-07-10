@@ -48,7 +48,5 @@
             android:id="@+id/button_submit_edited_profile"
             android:text="Update"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="120dp"
-            tools:layout_editor_absoluteY="417dp" />
+            android:layout_height="wrap_content" />
 </LinearLayout>

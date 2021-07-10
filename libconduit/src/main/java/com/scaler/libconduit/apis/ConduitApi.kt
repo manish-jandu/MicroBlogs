@@ -1,10 +1,11 @@
 package com.scaler.libconduit.apis
 
-import com.scaler.libconduit.requests.CreateArticleRequest
 import com.scaler.libconduit.requests.UserLoginRequest
 import com.scaler.libconduit.requests.UserSignupRequest
-import com.scaler.libconduit.requests.UserUpdateRequest
-import com.scaler.libconduit.responses.*
+import com.scaler.libconduit.responses.MultipleArticleResponse
+import com.scaler.libconduit.responses.SingleArticleResponse
+import com.scaler.libconduit.responses.TagsResponse
+import com.scaler.libconduit.responses.UserResponse
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -33,5 +34,17 @@ interface ConduitApi {
     suspend fun getFeedArticlesByTag(
         @Query("limit") limit:Int,
         @Query("tag") tag:String,
+    ): Response<MultipleArticleResponse>
+
+    @GET("articles")
+    suspend fun getFeedArticlesByUserName(
+        @Query("limit") limit:Int,
+        @Query("author") user:String,
+    ): Response<MultipleArticleResponse>
+
+    @GET("articles")
+    suspend fun getFeedArticlesByUserFavourite(
+        @Query("limit") limit:Int,
+        @Query("favorited") favourited:String,
     ): Response<MultipleArticleResponse>
 }

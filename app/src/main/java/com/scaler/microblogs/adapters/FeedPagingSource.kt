@@ -50,6 +50,24 @@ class FeedPagingSource(
                         nextKey = if (articles.isEmpty()) null else position + 1
                     )
                 }
+                FeedType.PROFILE_FEED ->{
+                    val response = api.getFeedArticlesByUserName(params.loadSize, userName!!)
+                    val articles = response.body()!!.articles
+                    LoadResult.Page(
+                        data = articles!!,
+                        prevKey = if (position == FEED_STARTING_INDEX) null else position - 1,
+                        nextKey = if (articles.isEmpty()) null else position + 1
+                    )
+                }
+                FeedType.PROFILE_FAVOURITE_FEED->{
+                val response = api.getFeedArticlesByUserFavourite(params.loadSize, userName!!)
+                val articles = response.body()!!.articles
+                LoadResult.Page(
+                    data = articles!!,
+                    prevKey = if (position == FEED_STARTING_INDEX) null else position - 1,
+                    nextKey = if (articles.isEmpty()) null else position + 1
+                )
+                }
                 else ->{
                     //get simple global feed
                     val response = api.getArticles(params.loadSize)
