@@ -50,6 +50,23 @@ class Repository @Inject constructor(
         pagingSourceFactory = { FeedPagingSource(api, authApi, feedType = FeedType.CURRENT_USER_FEED) }
     ).liveData
 
+    fun getFeedByUserName(userName:String) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            maxSize = 100,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { FeedPagingSource(api, authApi,userName = userName, feedType = FeedType.PROFILE_FEED) }
+    ).liveData
+
+    fun getFeedByUserFavourite(userName:String) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            maxSize = 100,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { FeedPagingSource(api, authApi,userName = userName, feedType = FeedType.PROFILE_FAVOURITE_FEED) }
+    ).liveData
 
     suspend fun signup(userName: String, email: String, password: String) =
         api.registerUser(UserSignupRequest(UserSignupData(email, password, userName)))
