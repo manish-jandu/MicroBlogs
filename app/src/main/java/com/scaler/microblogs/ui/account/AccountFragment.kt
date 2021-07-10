@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout
 import com.scaler.libconduit.models.User
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentAccountBinding
+import com.scaler.microblogs.utils.ArticleType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -25,8 +26,8 @@ class AccountFragment : Fragment() {
     private val accountViewModel: AccountViewModel by viewModels()
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
-    private val userFeedAdapter = ArticleAdapter()
-    private val userFavouriteFeedAdapter = ArticleAdapter()
+    private lateinit var userFeedAdapter: ArticleAdapter
+    private lateinit var userFavouriteFeedAdapter: ArticleAdapter
 
     companion object {
         fun newInstance() = AccountFragment()
@@ -43,6 +44,9 @@ class AccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
+
+        userFeedAdapter = ArticleAdapter(OnArticleClick(),ArticleType.USER_CREATED_ARTICLE)
+        userFavouriteFeedAdapter = ArticleAdapter(OnArticleClick(),ArticleType.ARTICLE)
 
         accountViewModel.currentUser.observe(viewLifecycleOwner) {
             it?.let {
@@ -208,11 +212,17 @@ class AccountFragment : Fragment() {
         }
     }
 
+    inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
+        override fun onItemClick(slug: String, articleType: ArticleType) {
+            val action =
+                AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
+            findNavController().navigate(action)
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
 

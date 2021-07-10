@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentTagsBinding
+import com.scaler.microblogs.utils.ArticleType
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +35,7 @@ class TagsFeedFragment : Fragment() {
 
         val tagToGetArticle = tagsFeedFragmentArgs.tag
 
-        val adapter = ArticleAdapter()
+        val adapter = ArticleAdapter(OnArticleClick(),ArticleType.ARTICLE)
         binding.recyclerViewTags.adapter = adapter
         binding.recyclerViewTags.layoutManager = LinearLayoutManager(requireContext())
 
@@ -48,6 +50,13 @@ class TagsFeedFragment : Fragment() {
         return binding.root
     }
 
+    inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
+        override fun onItemClick(slug: String, articleType: ArticleType) {
+            val action =
+                TagsFeedFragmentDirections.actionTagsFeedFragmentToArticleFragment(articleType, slug)
+            findNavController().navigate(action)
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

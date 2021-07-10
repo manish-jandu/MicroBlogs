@@ -8,8 +8,8 @@
         >
 
     <Button
-            android:id="@+id/button_save_article"
-            android:text="Save"
+            android:id="@+id/button_edit_article"
+            android:text="Edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/button_save_article"
+            app:layout_constraintEnd_toStartOf="@+id/button_edit_article"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,7 +40,7 @@
             android:layout_marginTop="34dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_save_article" />
+            app:layout_constraintTop_toBottomOf="@+id/button_edit_article" />
 
     <TextView
             android:id="@+id/text_view_description"
@@ -80,13 +80,13 @@
             android:layout_height="wrap_content"
             android:hint="Comment"
             android:layout_marginHorizontal="4dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/button3"
-            app:layout_constraintEnd_toStartOf="@+id/button3"
+            app:layout_constraintBaseline_toBaselineOf="@+id/button_comment"
+            app:layout_constraintEnd_toStartOf="@+id/button_comment"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-            android:id="@+id/button3"
+            android:id="@+id/button_comment"
             android:text="Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

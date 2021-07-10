@@ -9,7 +9,7 @@
             android:id="@+id/nav_feed"
             android:name="com.scaler.microblogs.ui.feed.FeedFragment"
             android:label="@string/title_feed"
-            tools:layout="@layout/fragment_feed" >
+            tools:layout="@layout/fragment_feed">
         <action
                 android:id="@+id/action_nav_feed_to_addEditArticleFragment"
                 app:destination="@id/addEditArticleFragment" />
@@ -32,7 +32,7 @@
             android:id="@+id/nav_account"
             android:name="com.scaler.microblogs.ui.account.AccountFragment"
             android:label="@string/title_account"
-            tools:layout="@layout/fragment_account" >
+            tools:layout="@layout/fragment_account">
         <action
                 android:id="@+id/action_nav_account_to_loginFragment"
                 app:destination="@id/loginFragment" />
@@ -81,6 +81,14 @@
     <fragment
             android:id="@+id/articleFragment"
             android:name="com.scaler.microblogs.ui.article.ArticleFragment"
-            android:label="fragment_article"
-            tools:layout="@layout/fragment_article" />
+            android:label="Article"
+            tools:layout="@layout/fragment_article">
+        <argument
+                android:name="articleType"
+                android:defaultValue="ARTICLE"
+                app:argType="com.scaler.microblogs.utils.ArticleType" />
+        <argument
+                android:name="slug"
+                app:argType="string" />
+    </fragment>
 </navigation>

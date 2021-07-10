@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentFeedBinding
+import com.scaler.microblogs.utils.ArticleType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -40,8 +41,8 @@ class FeedFragment : Fragment() {
     ): View {
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
 
-        val currentUserAdapter = ArticleAdapter()
-        val globalAdapter = ArticleAdapter()
+        val currentUserAdapter = ArticleAdapter(OnArticleClick(),ArticleType.ARTICLE)
+        val globalAdapter = ArticleAdapter(OnArticleClick(),ArticleType.ARTICLE)
 
         binding.apply {
             recyclerViewCurrentUserFeed.adapter = currentUserAdapter
@@ -123,6 +124,13 @@ class FeedFragment : Fragment() {
         return binding.root
     }
 
+    inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
+        override fun onItemClick(slug: String, articleType: ArticleType) {
+            val action =
+                FeedFragmentDirections.actionNavFeedToArticleFragment(articleType, slug)
+            findNavController().navigate(action)
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

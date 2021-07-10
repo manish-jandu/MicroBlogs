@@ -8,8 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scaler.libconduit.models.Article
 import com.scaler.microblogs.databinding.ItemPostBinding
+import com.scaler.microblogs.utils.ArticleType
 
-class ArticleAdapter() : PagingDataAdapter<Article, ArticleAdapter.PostViewHolder>(DiffUtilCallback()) {
+class ArticleAdapter(
+    private val onArticleClick: OnArticleClick,
+    private val articleType: ArticleType
+) :
+    PagingDataAdapter<Article, ArticleAdapter.PostViewHolder>(DiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,11 +28,16 @@ class ArticleAdapter() : PagingDataAdapter<Article, ArticleAdapter.PostViewHolde
         }
     }
 
+    interface OnArticleClick {
+        fun onItemClick(slug: String, articleType: ArticleType)
+    }
+
     inner class PostViewHolder(binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
         private val userName = binding.textViewUserName
         private val description = binding.textViewDescription
         private val profilePhoto = binding.imageViewProfile
         private val time = binding.textViewTime
+        private val root = binding.root
 
         fun bind(item: Article) {
             userName.text = item.author?.username
@@ -37,6 +47,9 @@ class ArticleAdapter() : PagingDataAdapter<Article, ArticleAdapter.PostViewHolde
                 .load(item.author!!.image)
                 .centerCrop()
                 .into(profilePhoto)
+            root.setOnClickListener {
+                onArticleClick.onItemClick(item.slug!!,articleType)
+            }
         }
     }
 
