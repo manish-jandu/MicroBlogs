@@ -2,10 +2,7 @@ package com.scaler.libconduit.apis
 
 import com.scaler.libconduit.requests.UserLoginRequest
 import com.scaler.libconduit.requests.UserSignupRequest
-import com.scaler.libconduit.responses.MultipleArticleResponse
-import com.scaler.libconduit.responses.SingleArticleResponse
-import com.scaler.libconduit.responses.TagsResponse
-import com.scaler.libconduit.responses.UserResponse
+import com.scaler.libconduit.responses.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -47,4 +44,9 @@ interface ConduitApi {
         @Query("limit") limit:Int,
         @Query("favorited") favourited:String,
     ): Response<MultipleArticleResponse>
+
+    @GET("articles/{slug}/comments")
+    suspend fun getComments(
+        @Path("slug") slug: String
+    ): Response<MultipleCommentResponse>
 }

@@ -11,7 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.scaler.microblogs.R
+import com.scaler.microblogs.adapters.CommentsAdapter
 import com.scaler.microblogs.databinding.FragmentArticleBinding
 import com.scaler.microblogs.utils.ArticleType
 import com.scaler.microblogs.utils.Constants.EDITED_ARTICLE
@@ -26,41 +29,52 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
     private val articleViewModel: ArticleViewModel by viewModels()
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
-    private val args : ArticleFragmentArgs by navArgs()
+    private val args: ArticleFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentArticleBinding.bind(view)
 
+        val commendAdapter = CommentsAdapter()
         val articleType = args.articleType
         val slug = args.slug
 
         articleViewModel.getArticleData(slug)
+        articleViewModel.getComments(slug)
 
         Log.i(TAG, "onViewCreated: type $articleType")
         Log.i(TAG, "onViewCreated: slug $slug")
 
         binding.apply {
-            if(articleType == ArticleType.USER_CREATED_ARTICLE){
+            if (articleType == ArticleType.USER_CREATED_ARTICLE) {
                 buttonEditArticle.visibility = View.VISIBLE
                 buttonDeleteArticle.visibility = View.VISIBLE
-            }else{
+            } else {
                 buttonEditArticle.visibility = View.GONE
                 buttonDeleteArticle.visibility = View.GONE
             }
         }
 
         binding.apply {
+            recyclerViewComments.adapter = commendAdapter
+            recyclerViewComments.layoutManager = LinearLayoutManager(requireContext())
+
             buttonDeleteArticle.setOnClickListener {
                 showDialog(slug)
             }
+
             buttonEditArticle.setOnClickListener {
-                val action = ArticleFragmentDirections.actionArticleFragmentToAddEditArticleFragment(slug)
+                val action =
+                    ArticleFragmentDirections.actionArticleFragmentToAddEditArticleFragment(slug)
                 findNavController().navigate(action)
+            }
+
+            buttonComment.setOnClickListener {
+                createComment(slug)
             }
         }
 
-        articleViewModel.article.observe(viewLifecycleOwner){
+        articleViewModel.article.observe(viewLifecycleOwner) {
             it?.let {
                 binding.apply {
                     textViewTitle.text = it.title
@@ -68,25 +82,45 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                 }
             }
         }
+
+        articleViewModel.comments.observe(viewLifecycleOwner) {
+            it?.let {
+                commendAdapter.submitList(it.comments)
+            }
+        }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            articleViewModel.articleEvent.collect {event->
-                when(event){
-                    is ArticleViewModel.ArticleEvent.Error ->{
+            articleViewModel.articleEvent.collect { event ->
+                when (event) {
+                    is ArticleViewModel.ArticleEvent.Error -> {
                         findNavController().navigateUp()
-                        Toast.makeText(requireContext(),"Try Again!",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Try Again!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
         //refresh
-        setFragmentResultListener(FRAGMENT_ADD_EDIT_RESULT_REQUEST_KEY){_,bundle->
-            val result =bundle.getBoolean(EDITED_ARTICLE)
-            if(result){
+        setFragmentResultListener(FRAGMENT_ADD_EDIT_RESULT_REQUEST_KEY) { _, bundle ->
+            val result = bundle.getBoolean(EDITED_ARTICLE)
+            if (result) {
                 findNavController().navigateUp()
-                Toast.makeText(requireContext(),"Article Updated",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Article Updated", Toast.LENGTH_SHORT).show()
             }
         }
 
+    }
+
+    private fun createComment(slug: String) {
+        binding.apply {
+            val comment = editTextComment.text.toString().trim()
+            if (comment.isEmpty()) {
+                Snackbar.make(requireView(), "Comment cannot be empty", Snackbar.LENGTH_SHORT)
+                    .show()
+            } else {
+                editTextComment.setText("")
+                editTextComment.clearFocus()
+                articleViewModel.createComment(slug, comment)
+            }
+        }
     }
 
     private fun showDialog(slug: String) {
@@ -96,7 +130,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             .setPositiveButton("Delete") { _, _ ->
                 articleViewModel.deleteArticle(slug)
                 findNavController().navigateUp()
-                Toast.makeText(requireContext(),"Article deleted",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Article deleted", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("No") { _, _ ->
 

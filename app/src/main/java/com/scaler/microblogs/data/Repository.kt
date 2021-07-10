@@ -76,4 +76,6 @@ class Repository @Inject constructor(
 
     suspend fun getArticleBySlug(slug:String) = api.getArticleBySlug(slug)
 
+    suspend fun getCommentsBySlug(slug: String) = api.getComments(slug)
+
 }

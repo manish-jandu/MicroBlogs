@@ -1,9 +1,6 @@
 package com.scaler.microblogs.data
 
-import com.scaler.libconduit.requests.ArticleData
-import com.scaler.libconduit.requests.CreateArticleRequest
-import com.scaler.libconduit.requests.UserUpdateData
-import com.scaler.libconduit.requests.UserUpdateRequest
+import com.scaler.libconduit.requests.*
 import com.scaler.microblogs.di.AuthModule
 
 
@@ -29,4 +26,7 @@ class AuthRepository() {
     suspend fun deleteArticle(slug: String) {
         api.deleteArticle(slug)
     }
+
+    suspend fun createComment(slug:String,body: String) = api.createComment(slug, CreateComment(body))
+
 }

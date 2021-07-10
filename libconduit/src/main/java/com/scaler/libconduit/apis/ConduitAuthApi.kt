@@ -1,6 +1,8 @@
 package com.scaler.libconduit.apis
 
+import com.scaler.libconduit.models.Comment
 import com.scaler.libconduit.requests.CreateArticleRequest
+import com.scaler.libconduit.requests.CreateComment
 import com.scaler.libconduit.requests.UserUpdateRequest
 import com.scaler.libconduit.responses.MultipleArticleResponse
 import com.scaler.libconduit.responses.ProfileResponse
@@ -46,5 +48,13 @@ interface ConduitAuthApi {
     suspend fun deleteArticle(
         @Path("slug") slug: String,
     ): Response<Void>
+
+
+
+    @POST("articles/{slug}/comments")
+    suspend fun createComment(
+        @Path("slug") slug: String,
+        @Body createComment: CreateComment
+    ): Response<Comment>
 
 }
