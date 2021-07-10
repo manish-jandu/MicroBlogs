@@ -77,7 +77,8 @@ class AccountFragment : Fragment() {
                 findNavController().navigate(action)
             }
             buttonEditProfile.setOnClickListener {
-                //Todo: move to edit profile
+                val action = AccountFragmentDirections.actionNavAccountToEditProfileFragment()
+                findNavController().navigate(action)
             }
             buttonSignOut.setOnClickListener {
                 accountViewModel.signOut()

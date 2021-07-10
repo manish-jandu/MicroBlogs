@@ -32,6 +32,9 @@
         <action
                 android:id="@+id/action_nav_account_to_signupFragment"
                 app:destination="@id/signupFragment" />
+        <action
+                android:id="@+id/action_nav_account_to_editProfileFragment"
+                app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
             android:id="@+id/tagsFeedFragment"
@@ -52,4 +55,9 @@
             android:name="com.scaler.microblogs.ui.auth.SignupFragment"
             android:label="Sign up"
             tools:layout="@layout/fragment_signup" />
+    <fragment
+            android:id="@+id/editProfileFragment"
+            android:name="com.scaler.microblogs.ui.editProfile.EditProfileFragment"
+            android:label="Edit Profile"
+            tools:layout="@layout/fragment_edit_profile" />
 </navigation>
