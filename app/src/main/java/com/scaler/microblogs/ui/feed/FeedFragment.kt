@@ -28,14 +28,17 @@ class FeedFragment : Fragment() {
         fun newInstance() = FeedFragment()
     }
 
+    override fun onStart() {
+        super.onStart()
+        feedViewModel.getUserToken()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
-
-        feedViewModel.getUserToken()
 
         val currentUserAdapter = ArticleAdapter()
         val globalAdapter = ArticleAdapter()

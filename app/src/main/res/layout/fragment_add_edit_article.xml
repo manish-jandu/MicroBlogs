@@ -25,7 +25,7 @@
             android:layout_height="wrap_content" />
 
     <EditText
-            android:id="@+id/edit_text_article"
+            android:id="@+id/edit_text_article_body"
             android:hint="Write your Article(in markdown)"
             android:layout_width="match_parent"
             android:layout_marginBottom="8dp"
@@ -35,7 +35,7 @@
 
     <EditText
             android:id="@+id/edit_text_article_tags"
-            android:hint="Enter Tags"
+            android:hint="Enter Tags(separating with ,)"
             android:layout_width="match_parent"
             android:layout_marginBottom="8dp"
             android:layout_marginHorizontal="16dp"
