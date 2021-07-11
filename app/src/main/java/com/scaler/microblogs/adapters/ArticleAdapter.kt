@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide
 import com.scaler.libconduit.models.Article
 import com.scaler.microblogs.databinding.ItemPostBinding
 import com.scaler.microblogs.utils.ArticleType
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ArticleAdapter(
     private val onArticleClick: OnArticleClick,
@@ -30,7 +32,7 @@ class ArticleAdapter(
 
     interface OnArticleClick {
         fun onItemClick(slug: String, articleType: ArticleType)
-        fun onProfileClick(userName:String)
+        fun onProfileClick(userName: String)
     }
 
     inner class PostViewHolder(binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -43,7 +45,7 @@ class ArticleAdapter(
         fun bind(item: Article) {
             userName.text = item.author?.username
             description.text = item.description
-            time.text = item.updatedAt
+            time.text =formattedTime(item.updatedAt!!)
 
             Glide.with(profilePhoto)
                 .load(item.author!!.image)
@@ -51,7 +53,7 @@ class ArticleAdapter(
                 .into(profilePhoto)
 
             root.setOnClickListener {
-                onArticleClick.onItemClick(item.slug!!,articleType)
+                onArticleClick.onItemClick(item.slug!!, articleType)
             }
 
             userName.setOnClickListener {
@@ -61,6 +63,13 @@ class ArticleAdapter(
             profilePhoto.setOnClickListener {
                 onArticleClick.onProfileClick(item.author!!.username!!)
             }
+        }
+
+        private fun formattedTime(updatedAt: String): String? {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val outputForamt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val date = inputFormat.parse(updatedAt)
+            return outputForamt.format(date)
         }
     }
 
