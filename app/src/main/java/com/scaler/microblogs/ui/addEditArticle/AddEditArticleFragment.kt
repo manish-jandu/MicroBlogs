@@ -2,6 +2,7 @@ package com.scaler.microblogs.ui.addEditArticle
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -63,6 +64,10 @@ class AddEditArticleFragment : Fragment(R.layout.fragment_add_edit_article) {
                     }
                     is AddEditArticleEvent.Error -> {
                         showSnackBar("Something went wrong please try again")
+                    }
+                    is AddEditArticleEvent.LoggedOut->{
+                        Toast.makeText(requireContext(),"Login to create Article.",Toast.LENGTH_SHORT).show()
+                        findNavController().navigateUp()
                     }
                 }
             }

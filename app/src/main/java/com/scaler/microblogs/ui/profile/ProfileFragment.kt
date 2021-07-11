@@ -132,7 +132,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     @SuppressLint("SetTextI18n")
     private fun currentlyLoggedOut() {
-        binding.buttonFollowUnfollow.text = "UnFollow"
+        binding.buttonFollowUnfollow.text = "Follow"
         binding.buttonFollowUnfollow.setOnClickListener {
             Toast.makeText(requireContext(), "Currently Logged out", Toast.LENGTH_SHORT).show()
         }
