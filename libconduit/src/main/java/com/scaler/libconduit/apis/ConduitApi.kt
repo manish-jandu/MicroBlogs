@@ -49,4 +49,11 @@ interface ConduitApi {
     suspend fun getComments(
         @Path("slug") slug: String
     ): Response<MultipleCommentResponse>
+
+    @GET("profiles/{username}")
+    suspend fun getProfileByUserName(
+        @Path("username") username: String
+    ): Response<ProfileResponse>
+
+
 }

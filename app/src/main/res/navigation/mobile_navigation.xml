@@ -16,6 +16,9 @@
         <action
                 android:id="@+id/action_nav_feed_to_articleFragment"
                 app:destination="@id/articleFragment" />
+        <action
+                android:id="@+id/action_nav_feed_to_profileFragment"
+                app:destination="@id/profileFragment" />
     </fragment>
 
     <fragment
@@ -45,6 +48,9 @@
         <action
                 android:id="@+id/action_nav_account_to_articleFragment"
                 app:destination="@id/articleFragment" />
+        <action
+                android:id="@+id/action_nav_account_to_profileFragment"
+                app:destination="@id/profileFragment" />
     </fragment>
     <fragment
             android:id="@+id/tagsFeedFragment"
@@ -57,6 +63,9 @@
         <action
                 android:id="@+id/action_tagsFeedFragment_to_articleFragment"
                 app:destination="@id/articleFragment" />
+        <action
+                android:id="@+id/action_tagsFeedFragment_to_profileFragment"
+                app:destination="@id/profileFragment" />
     </fragment>
     <fragment
             android:id="@+id/loginFragment"
@@ -99,5 +108,20 @@
         <action
                 android:id="@+id/action_articleFragment_to_addEditArticleFragment"
                 app:destination="@id/addEditArticleFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/profileFragment"
+            android:name="com.scaler.microblogs.ui.profile.ProfileFragment"
+            android:label="Profile"
+            tools:layout="@layout/fragment_profile" >
+        <argument
+            app:argType="string"
+            android:name="userName"/>
+        <action
+                android:id="@+id/action_profileFragment_to_articleFragment"
+                app:destination="@id/articleFragment" />
+        <action
+                android:id="@+id/action_profileFragment_self"
+                app:destination="@id/profileFragment" />
     </fragment>
 </navigation>

@@ -27,7 +27,15 @@ class AuthRepository() {
         api.deleteArticle(slug)
     }
 
-    suspend fun createComment(slug:String,body: String) = api.createComment(slug, CreateComment(body))
+    suspend fun createComment(slug: String, body: String) =
+        api.createComment(slug, CreateComment(body))
 
     suspend fun likeUnlike(slug: String) = api.likeUnlikeArticle(slug)
+
+    suspend fun getProfileByUserName(username: String) = api.getProfileByUsername(username)
+
+    suspend fun followAccount(userName: String) = api.followUser(userName)
+
+    suspend fun unfollowAccount(userName: String) = api.unfollowUser(userName)
+
 }

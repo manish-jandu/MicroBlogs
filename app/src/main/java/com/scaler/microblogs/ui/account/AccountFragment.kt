@@ -218,6 +218,11 @@ class AccountFragment : Fragment() {
                 AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
             findNavController().navigate(action)
         }
+
+        override fun onProfileClick(userName: String) {
+            val action = AccountFragmentDirections.actionNavAccountToProfileFragment(userName)
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroyView() {

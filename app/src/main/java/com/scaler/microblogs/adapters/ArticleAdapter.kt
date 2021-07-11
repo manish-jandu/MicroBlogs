@@ -30,6 +30,7 @@ class ArticleAdapter(
 
     interface OnArticleClick {
         fun onItemClick(slug: String, articleType: ArticleType)
+        fun onProfileClick(userName:String)
     }
 
     inner class PostViewHolder(binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -43,12 +44,22 @@ class ArticleAdapter(
             userName.text = item.author?.username
             description.text = item.description
             time.text = item.updatedAt
+
             Glide.with(profilePhoto)
                 .load(item.author!!.image)
                 .centerCrop()
                 .into(profilePhoto)
+
             root.setOnClickListener {
                 onArticleClick.onItemClick(item.slug!!,articleType)
+            }
+
+            userName.setOnClickListener {
+                onArticleClick.onProfileClick(item.author!!.username!!)
+            }
+
+            profilePhoto.setOnClickListener {
+                onArticleClick.onProfileClick(item.author!!.username!!)
             }
         }
     }

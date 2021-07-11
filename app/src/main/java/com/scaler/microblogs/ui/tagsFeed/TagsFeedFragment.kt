@@ -56,6 +56,11 @@ class TagsFeedFragment : Fragment() {
                 TagsFeedFragmentDirections.actionTagsFeedFragmentToArticleFragment(articleType, slug)
             findNavController().navigate(action)
         }
+
+        override fun onProfileClick(userName: String) {
+            val action = TagsFeedFragmentDirections.actionTagsFeedFragmentToProfileFragment(userName)
+            findNavController().navigate(action)
+        }
     }
     override fun onDestroyView() {
         super.onDestroyView()
