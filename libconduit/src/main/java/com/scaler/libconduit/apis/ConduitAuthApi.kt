@@ -23,11 +23,6 @@ interface ConduitAuthApi {
     @GET("profiles/{username}")
     suspend fun getProfileByUsername(@Path("username") username: String): Response<ProfileResponse>
 
-    @POST("profiles/{username}/follow")
-    suspend fun followUser(@Path("username") username: String): Response<ProfileResponse>
-
-    @DELETE("profiles/{username}/follow")
-    suspend fun unfollowUser(@Path("username") username: String): Response<ProfileResponse>
 
     @GET("articles/feed")
     suspend fun getFeedArticles(
@@ -51,16 +46,30 @@ interface ConduitAuthApi {
     ): Response<Void>
 
 
-
     @POST("articles/{slug}/comments")
     suspend fun createComment(
         @Path("slug") slug: String,
         @Body createComment: CreateComment
     ): Response<Comment>
 
+    @POST("profiles/{username}/follow")
+    suspend fun followUser(@Path("username") username: String): Response<ProfileResponse>
+
+    @DELETE("profiles/{username}/follow")
+    suspend fun unfollowUser(@Path("username") username: String): Response<ProfileResponse>
+
+    @GET("articles/{slug}")
+    suspend fun getArticleBySlug(
+        @Path("slug") slug: String
+    ): Response<SingleArticleResponse>
 
     @POST("articles/{slug}/favorite")
-    suspend fun likeUnlikeArticle(
+    suspend fun likeArticle(
+        @Path("slug") slug: String,
+    ): Response<Article>
+
+    @DELETE("articles/{slug}/favorite")
+    suspend fun unlikeArticle(
         @Path("slug") slug: String,
     ): Response<Article>
 }

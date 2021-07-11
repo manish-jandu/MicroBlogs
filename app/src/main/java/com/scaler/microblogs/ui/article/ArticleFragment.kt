@@ -1,7 +1,6 @@
 package com.scaler.microblogs.ui.article
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -31,51 +30,42 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
     private val args: ArticleFragmentArgs by navArgs()
+    val commentAdapter = CommentsAdapter()
+
+    private var isLoggedIn: Boolean = false
     private var isFavourite: Boolean = false
+    private lateinit var slug: String
+    private lateinit var articleType: ArticleType
+
+    override fun onStart() {
+        super.onStart()
+        articleViewModel.checkIfLoggedIn()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentArticleBinding.bind(view)
 
-        val commendAdapter = CommentsAdapter()
-        val articleType = args.articleType
-        val slug = args.slug
+        articleType = args.articleType
+        slug = args.slug
 
-        articleViewModel.getArticleData(slug)
+        articleViewModel.checkIfLoggedIn()
         articleViewModel.getComments(slug)
 
-        Log.i(TAG, "onViewCreated: type $articleType")
-        Log.i(TAG, "onViewCreated: slug $slug")
+        setViewForTypeOfArticle()
+        setUpArticle()
 
-        binding.apply {
-            if (articleType == ArticleType.USER_CREATED_ARTICLE) {
-                buttonEditArticle.visibility = View.VISIBLE
-                buttonDeleteArticle.visibility = View.VISIBLE
-            } else {
-                buttonEditArticle.visibility = View.GONE
-                buttonDeleteArticle.visibility = View.GONE
-            }
-        }
-
-        binding.apply {
-            recyclerViewComments.adapter = commendAdapter
-            recyclerViewComments.layoutManager = LinearLayoutManager(requireContext())
-
-            buttonDeleteArticle.setOnClickListener {
-                showDialog(slug)
-            }
-
-            buttonEditArticle.setOnClickListener {
-                val action =
-                    ArticleFragmentDirections.actionArticleFragmentToAddEditArticleFragment(slug)
-                findNavController().navigate(action)
-            }
-
-            buttonComment.setOnClickListener {
-                createComment(slug)
-            }
-            viewLikeButton.setOnClickListener {
-                articleViewModel.setLikeUnlikeArticle(slug)
+        articleViewModel.isLoggedIn.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+                    isLoggedIn = true
+                    currentlyLoggedIn()
+                    articleViewModel.getArticleDataByAuthRepo(slug)
+                } else {
+                    isLoggedIn = false
+                    currentlyLoggedOut()
+                    articleViewModel.getArticleDataByRepo(slug)
+                }
             }
         }
 
@@ -94,19 +84,16 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
 
         articleViewModel.comments.observe(viewLifecycleOwner) {
             it?.let {
-                commendAdapter.submitList(it.comments)
+                commentAdapter.submitList(it.comments)
             }
         }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             articleViewModel.articleEvent.collect { event ->
                 when (event) {
                     is ArticleViewModel.ArticleEvent.Error -> {
                         findNavController().navigateUp()
                         Toast.makeText(requireContext(), "Try Again!", Toast.LENGTH_SHORT).show()
-                    }
-                    is ArticleViewModel.ArticleEvent.LikeUnlike -> {
-                        isFavourite = !isFavourite
-                        setFavourite(isFavourite)
                     }
                 }
             }
@@ -120,6 +107,63 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             }
         }
 
+    }
+
+    private fun setViewForTypeOfArticle() {
+        binding.apply {
+            if (articleType == ArticleType.USER_CREATED_ARTICLE) {
+                buttonEditArticle.visibility = View.VISIBLE
+                buttonDeleteArticle.visibility = View.VISIBLE
+            } else {
+                buttonEditArticle.visibility = View.GONE
+                buttonDeleteArticle.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setUpArticle() {
+        binding.apply {
+            recyclerViewComments.adapter = commentAdapter
+            recyclerViewComments.layoutManager = LinearLayoutManager(requireContext())
+
+            buttonDeleteArticle.setOnClickListener {
+                showDialog(slug)
+            }
+            buttonEditArticle.setOnClickListener {
+                val action =
+                    ArticleFragmentDirections.actionArticleFragmentToAddEditArticleFragment(slug)
+                findNavController().navigate(action)
+            }
+
+        }
+
+    }
+
+    private fun currentlyLoggedIn() {
+        binding.imageLikeUnlike.setOnClickListener {
+            if (isFavourite) {
+                isFavourite =!isFavourite
+                setFavourite(isFavourite)
+                articleViewModel.unlikeArticle(slug)
+            } else {
+                isFavourite =!isFavourite
+                setFavourite(isFavourite)
+                articleViewModel.likeArticle(slug)
+            }
+        }
+        binding.buttonComment.setOnClickListener {
+            createComment(slug)
+        }
+    }
+
+    private fun currentlyLoggedOut() {
+        binding.imageLikeUnlike.setOnClickListener {
+            Toast.makeText(requireContext(), "Login and try again!", Toast.LENGTH_SHORT).show()
+        }
+        binding.buttonComment.setOnClickListener {
+            Toast.makeText(requireContext(), "Login and try again!", Toast.LENGTH_SHORT).show()
+
+        }
     }
 
     private fun setFavourite(isFavourite: Boolean?) {
