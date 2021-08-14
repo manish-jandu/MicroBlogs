@@ -6,13 +6,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-val PRIVATE_MODE = 0
-val PREF_NAME = "user_token_key"
 
 @Singleton
 class AppPrefStorage @Inject constructor(@ApplicationContext context: Context) {
-    val sharedPref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
-
+    private val PRIVATE_MODE = 0
+    private val PREF_NAME = "user_token_key"
+    private val sharedPref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
 
     fun getUserToken(): String? {
         return sharedPref.getString(PREF_NAME, null)
