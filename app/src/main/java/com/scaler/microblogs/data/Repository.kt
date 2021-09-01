@@ -8,8 +8,10 @@ import com.scaler.libconduit.requests.UserLoginData
 import com.scaler.libconduit.requests.UserLoginRequest
 import com.scaler.libconduit.requests.UserSignupData
 import com.scaler.libconduit.requests.UserSignupRequest
-import com.scaler.microblogs.adapters.pagingadapters.*
-import com.scaler.microblogs.di.AuthModule
+import com.scaler.microblogs.adapters.pagingadapters.FavouriteFeedPagingSource
+import com.scaler.microblogs.adapters.pagingadapters.GlobalFeedPagingSource
+import com.scaler.microblogs.adapters.pagingadapters.ProfileFeedPagingSource
+import com.scaler.microblogs.adapters.pagingadapters.TagsFeedPagingSource
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,23 +19,19 @@ import javax.inject.Singleton
 class Repository @Inject constructor(
     private val api: ConduitApi,
 ) {
-    val authApi = AuthModule.authApi
-
-    fun getFeeds() =
-        Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                maxSize = 100,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
-                GlobalFeedPagingSource(
-                    api,
-                )
-            }
-        ).liveData
-
     suspend fun getTags() = api.getTags()
+
+    suspend fun signup(userName: String, email: String, password: String) =
+        api.registerUser(UserSignupRequest(UserSignupData(email, password, userName)))
+
+    suspend fun login(email: String, password: String) =
+        api.loginUser(UserLoginRequest(UserLoginData(email, password)))
+
+    suspend fun getArticleBySlug(slug: String) = api.getArticleBySlug(slug)
+
+    suspend fun getCommentsBySlug(slug: String) = api.getComments(slug)
+
+    suspend fun getProfileByUserName(userName: String) = api.getProfileByUserName(userName)
 
     fun getFeedByTag(tag: String) = Pager(
         config = PagingConfig(
@@ -43,19 +41,6 @@ class Repository @Inject constructor(
         ),
         pagingSourceFactory = {
             TagsFeedPagingSource(api, tag)
-        }
-    ).liveData
-
-    fun getCurrentUseFeed() = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-            maxSize = 100,
-            enablePlaceholders = false
-        ),
-        pagingSourceFactory = {
-            CurrentUserFeedPagingSource(
-                authApi,
-            )
         }
     ).liveData
 
@@ -87,16 +72,17 @@ class Repository @Inject constructor(
         }
     ).liveData
 
-    suspend fun signup(userName: String, email: String, password: String) =
-        api.registerUser(UserSignupRequest(UserSignupData(email, password, userName)))
-
-    suspend fun login(email: String, password: String) =
-        api.loginUser(UserLoginRequest(UserLoginData(email, password)))
-
-    suspend fun getArticleBySlug(slug: String) = api.getArticleBySlug(slug)
-
-    suspend fun getCommentsBySlug(slug: String) = api.getComments(slug)
-
-    suspend fun getProfileByUserName(userName: String) = api.getProfileByUserName(userName)
-
+    fun getFeeds() =
+        Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                maxSize = 100,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                GlobalFeedPagingSource(
+                    api,
+                )
+            }
+        ).liveData
 }

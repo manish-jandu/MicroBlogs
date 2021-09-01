@@ -27,7 +27,7 @@ class FeedViewModel @Inject constructor(
     val feedEvent = feedEventChannel.receiveAsFlow()
 
     val globalArticles = repo.getFeeds().cachedIn(viewModelScope)
-    val feedArticles = repo.getCurrentUseFeed().cachedIn(viewModelScope)
+    val feedArticles = authRepo.getCurrentUseFeed().cachedIn(viewModelScope)
 
     fun getUserToken() = viewModelScope.launch {
         val token = appPrefStorage.getUserToken()
