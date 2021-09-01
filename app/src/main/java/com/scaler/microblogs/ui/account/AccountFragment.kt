@@ -2,52 +2,42 @@ package com.scaler.microblogs.ui.account
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.scaler.libconduit.models.User
-import com.scaler.microblogs.adapters.ArticleAdapter
+import com.scaler.microblogs.R
+import com.scaler.microblogs.adapters.viewpager.AccountViewPagerAdapter
 import com.scaler.microblogs.databinding.FragmentAccountBinding
-import com.scaler.microblogs.utils.ArticleType
+import com.scaler.microblogs.ui.favouritearticles.FavouriteArticlesFragment
+import com.scaler.microblogs.ui.userarticles.UserArticlesFragment
 import com.scaler.microblogs.viewmodels.AccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class AccountFragment : Fragment() {
+class AccountFragment : Fragment(R.layout.fragment_account) {
 
     private val accountViewModel: AccountViewModel by viewModels()
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
-    private lateinit var userFeedAdapter: ArticleAdapter
-    private lateinit var userFavouriteFeedAdapter: ArticleAdapter
-
-    companion object {
-        fun newInstance() = AccountFragment()
-    }
 
     override fun onStart() {
         super.onStart()
         accountViewModel.getUserToken()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAccountBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentAccountBinding.bind(view)
 
-        userFeedAdapter = ArticleAdapter(OnArticleClick(),ArticleType.USER_CREATED_ARTICLE)
-        userFavouriteFeedAdapter = ArticleAdapter(OnArticleClick(),ArticleType.ARTICLE)
+        setupButtons()
+        setupTabsLayout()
 
         accountViewModel.currentUser.observe(viewLifecycleOwner) {
             it?.let {
@@ -59,14 +49,14 @@ class AccountFragment : Fragment() {
             accountViewModel.accountEvent.collect { event ->
                 when (event) {
                     is AccountViewModel.AccountEvent.LoggedIn -> {
-                        currentlyLogedIn()
+                        currentlyLoggedIn()
                         Log.i("AccountFragment", "onCreateView: new token is ${event.token}")
                     }
                     is AccountViewModel.AccountEvent.LoggedOut -> {
                         currentlyLoggedOut()
                     }
                     is AccountViewModel.AccountEvent.GotUser -> {
-                        observeArticles()
+
                     }
                     is AccountViewModel.AccountEvent.ErrorLoadingData -> {
                         currentlyLoggedOut()
@@ -80,6 +70,9 @@ class AccountFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun setupButtons() {
         binding.apply {
             buttonLogin.setOnClickListener {
                 val action = AccountFragmentDirections.actionNavAccountToLoginFragment()
@@ -97,91 +90,6 @@ class AccountFragment : Fragment() {
                 accountViewModel.signOut()
             }
         }
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.apply {
-            recyclerViewUserFavouritesFeed.adapter = userFavouriteFeedAdapter
-            recyclerViewUserFavouritesFeed.layoutManager = LinearLayoutManager(requireContext())
-            recyclerViewUserFavouritesFeed.visibility = View.GONE
-
-            recyclerViewUserFeed.adapter = userFeedAdapter
-            recyclerViewUserFeed.layoutManager = LinearLayoutManager(requireContext())
-        }
-
-        val tabsLayout = binding.tabsLayoutCurrentUser
-        val userFeed = tabsLayout.getTabAt(0)
-        val userFavouriteFeed = tabsLayout.getTabAt(1)
-
-        binding.tabsLayoutCurrentUser.addOnTabSelectedListener(object :
-            TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (tab) {
-                    userFeed -> {
-                        binding.recyclerViewUserFavouritesFeed.visibility = View.GONE
-                        binding.recyclerViewUserFeed.visibility = View.VISIBLE
-                    }
-                    userFavouriteFeed -> {
-                        binding.recyclerViewUserFavouritesFeed.visibility = View.VISIBLE
-                        binding.recyclerViewUserFeed.visibility = View.GONE
-                    }
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                when (tab) {
-                    userFeed -> {
-                    }
-                    userFavouriteFeed -> {
-                    }
-                }
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                when (tab) {
-                    userFeed -> {
-                    }
-                    userFavouriteFeed -> {
-                    }
-                }
-            }
-
-        })
-
-    }
-
-    private fun observeArticles() {
-        accountViewModel.userArticles.observe(viewLifecycleOwner) {
-            it?.let {
-                userFeedAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-            }
-        }
-        accountViewModel.favouriteArticles.observe(viewLifecycleOwner) {
-            it?.let {
-                userFavouriteFeedAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-            }
-        }
-    }
-
-    private fun currentlyLoggedOut() {
-        binding.apply {
-            textViewPleaseLoginSignUp.visibility = View.VISIBLE
-            buttonLogin.visibility = View.VISIBLE
-            buttonSignup.visibility = View.VISIBLE
-            buttonSignOut.visibility = View.GONE
-            buttonEditProfile.visibility = View.GONE
-            textViewUserName.visibility = View.GONE
-            textViewUserEmail.visibility = View.GONE
-            textViewUserBio.visibility = View.GONE
-            cardView.visibility = View.GONE
-            tabsLayoutCurrentUser.visibility = View.GONE
-            recyclerViewUserFeed.visibility = View.GONE
-            recyclerViewUserFavouritesFeed.visibility = View.GONE
-        }
     }
 
     private fun setCurrentUserData(user: User) {
@@ -196,34 +104,35 @@ class AccountFragment : Fragment() {
         }
     }
 
-    private fun currentlyLogedIn() {
+    private fun currentlyLoggedOut() {
         binding.apply {
-            textViewPleaseLoginSignUp.visibility = View.GONE
-            buttonLogin.visibility = View.GONE
-            buttonSignup.visibility = View.GONE
-            buttonSignOut.visibility = View.VISIBLE
-            buttonEditProfile.visibility = View.VISIBLE
-            textViewUserName.visibility = View.VISIBLE
-            textViewUserEmail.visibility = View.VISIBLE
-            textViewUserBio.visibility = View.VISIBLE
-            cardView.visibility = View.VISIBLE
-            tabsLayoutCurrentUser.visibility = View.VISIBLE
-            recyclerViewUserFeed.visibility = View.VISIBLE
-            recyclerViewUserFavouritesFeed.visibility = View.GONE
+            groupCurrentlyLoggedIn.visibility = View.GONE
+            groupCurrentlyLoggedOut.visibility = View.VISIBLE
         }
     }
 
-    inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
-        override fun onItemClick(slug: String, articleType: ArticleType) {
-            val action =
-                AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
-            findNavController().navigate(action)
+    private fun currentlyLoggedIn() {
+        binding.apply {
+            groupCurrentlyLoggedOut.visibility = View.GONE
+            groupCurrentlyLoggedIn.visibility = View.VISIBLE
         }
+    }
 
-        override fun onProfileClick(userName: String) {
-            val action = AccountFragmentDirections.actionNavAccountToProfileFragment(userName)
-            findNavController().navigate(action)
-        }
+    private fun setupTabsLayout() {
+        binding.viewPagerAccount.adapter = getPagerAdapter()
+
+        val titles = arrayListOf("My Posts", "Favourites")
+        TabLayoutMediator(
+            binding.tabsLayoutCurrentUser,
+            binding.viewPagerAccount
+        ) { tab, position ->
+            tab.text = titles[position]
+        }.attach()
+    }
+
+    private fun getPagerAdapter(): AccountViewPagerAdapter {
+        val fragments = arrayListOf(UserArticlesFragment(), FavouriteArticlesFragment())
+        return AccountViewPagerAdapter(fragments, this)
     }
 
     override fun onDestroyView() {
@@ -231,4 +140,3 @@ class AccountFragment : Fragment() {
         _binding = null
     }
 }
-

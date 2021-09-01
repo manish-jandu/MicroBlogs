@@ -6,6 +6,18 @@
         android:layout_height="match_parent"
         tools:context=".ui.account.AccountFragment">
 
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_currently_logged_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="view_pager_account,tabs_layout_current_user,button_sign_out,button_edit_profile,text_view_user_bio,text_view_user_email,text_view_user_name,cardView" />
+
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_currently_logged_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="text_view_please_login_sign_up,button_login,button_signup" />
+
     <TextView
             android:id="@+id/text_view_please_login_sign_up"
             android:visibility="gone"
@@ -139,36 +151,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/button_edit_profile">
+            app:layout_constraintTop_toBottomOf="@id/button_edit_profile"
+            tools:ignore="SpeakableTextPresentCheck">
 
-        <com.google.android.material.tabs.TabItem
-                android:text="My Feed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:text="Favourites"
-                android:layout_height="wrap_content" />
     </com.google.android.material.tabs.TabLayout>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_user_feed"
+    <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager_account"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabs_layout_current_user" />
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_user_favourites_feed"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tabs_layout_current_user" />
-
+            app:layout_constraintTop_toBottomOf="@+id/tabs_layout_current_user"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="0dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

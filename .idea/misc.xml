@@ -4,10 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_account.xml" value="0.25" />
+        <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_add_edit_article.xml" value="0.17083333333333334" />
+        <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_article.xml" value="0.22" />
+        <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_favourite_articles.xml" value="0.17083333333333334" />
         <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_feed.xml" value="0.17083333333333334" />
         <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_login.xml" value="0.17083333333333334" />
         <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_profile.xml" value="0.1" />
         <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_signup.xml" value="0.1" />
+        <entry key="..\:/Projects/Android-Projects/MicroBlogging-App-Android/app/src/main/res/layout/fragment_user_articles.xml" value="0.17083333333333334" />
         <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1855" />
         <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.2916666666666667" />
       </map>
