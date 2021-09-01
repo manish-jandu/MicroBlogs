@@ -19,6 +19,7 @@ import com.scaler.microblogs.databinding.FragmentArticleBinding
 import com.scaler.microblogs.utils.ArticleType
 import com.scaler.microblogs.utils.Constants.EDITED_ARTICLE
 import com.scaler.microblogs.utils.Constants.FRAGMENT_ADD_EDIT_RESULT_REQUEST_KEY
+import com.scaler.microblogs.viewmodels.ArticleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 

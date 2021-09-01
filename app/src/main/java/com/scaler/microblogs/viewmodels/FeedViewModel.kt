@@ -1,4 +1,4 @@
-package com.scaler.microblogs.ui.feed
+package com.scaler.microblogs.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

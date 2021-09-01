@@ -10,7 +10,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentLoginBinding
 import com.scaler.microblogs.di.AuthModule
-import com.scaler.microblogs.ui.auth.AuthViewModel.AuthEvent
+import com.scaler.microblogs.viewmodels.AuthViewModel
+import com.scaler.microblogs.viewmodels.AuthViewModel.AuthEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 

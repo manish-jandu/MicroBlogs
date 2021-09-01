@@ -1,4 +1,4 @@
-package com.scaler.microblogs.ui.editProfile
+package com.scaler.microblogs.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData

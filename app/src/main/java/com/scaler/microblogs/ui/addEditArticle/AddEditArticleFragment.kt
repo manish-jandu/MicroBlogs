@@ -14,9 +14,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.scaler.libconduit.models.Article
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentAddEditArticleBinding
-import com.scaler.microblogs.ui.addEditArticle.AddEditArticleViewModel.AddEditArticleEvent
 import com.scaler.microblogs.utils.Constants.EDITED_ARTICLE
 import com.scaler.microblogs.utils.Constants.FRAGMENT_ADD_EDIT_RESULT_REQUEST_KEY
+import com.scaler.microblogs.viewmodels.AddEditArticleViewModel
+import com.scaler.microblogs.viewmodels.AddEditArticleViewModel.AddEditArticleEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 

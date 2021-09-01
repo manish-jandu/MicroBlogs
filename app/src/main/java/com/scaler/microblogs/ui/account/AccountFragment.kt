@@ -17,6 +17,7 @@ import com.scaler.libconduit.models.User
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentAccountBinding
 import com.scaler.microblogs.utils.ArticleType
+import com.scaler.microblogs.viewmodels.AccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 

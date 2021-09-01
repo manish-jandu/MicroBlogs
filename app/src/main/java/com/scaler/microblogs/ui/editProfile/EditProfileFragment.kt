@@ -11,7 +11,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.scaler.libconduit.models.User
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentEditProfileBinding
-import com.scaler.microblogs.ui.editProfile.EditProfileViewModel.EditProfileEvent
+import com.scaler.microblogs.viewmodels.EditProfileViewModel
+import com.scaler.microblogs.viewmodels.EditProfileViewModel.EditProfileEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -52,16 +53,16 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                             Toast.LENGTH_LONG
                         ).show()
                     }
-                    is EditProfileEvent.ErrorInUserNameAndPassword ->{
+                    is EditProfileEvent.ErrorInUserNameAndPassword -> {
                         showSnackBar("Please enter valid username and password")
                     }
-                    is EditProfileEvent.ErrorInEmail ->{
+                    is EditProfileEvent.ErrorInEmail -> {
                         showSnackBar("Please enter valid email")
                     }
-                    is EditProfileEvent.ErrorInUpdatingData ->{
+                    is EditProfileEvent.ErrorInUpdatingData -> {
                         showSnackBar("Error while updating data try again!")
                     }
-                    is EditProfileEvent.SuccessFullyUpdatedData ->{
+                    is EditProfileEvent.SuccessFullyUpdatedData -> {
                         findNavController().navigateUp()
                         Toast.makeText(
                             requireContext(),
@@ -74,7 +75,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             }
         }
     }
-    private fun showSnackBar(message:String){
+
+    private fun showSnackBar(message: String) {
         Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
@@ -86,7 +88,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             val email = editTextEditEmail.text.toString().trim()
             val password = editTextEditPassword.text.toString().trim()
 
-            editProfileViewModel.updateUserData(username,bio,imageUrl,email,password)
+            editProfileViewModel.updateUserData(username, bio, imageUrl, email, password)
         }
     }
 

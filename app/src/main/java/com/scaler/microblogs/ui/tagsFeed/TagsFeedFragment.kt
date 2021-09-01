@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentTagsBinding
 import com.scaler.microblogs.utils.ArticleType
+import com.scaler.microblogs.viewmodels.TagsFeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

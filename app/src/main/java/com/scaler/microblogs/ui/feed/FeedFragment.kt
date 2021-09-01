@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayout
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentFeedBinding
 import com.scaler.microblogs.utils.ArticleType
+import com.scaler.microblogs.viewmodels.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 

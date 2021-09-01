@@ -17,6 +17,7 @@ import com.scaler.microblogs.R
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentProfileBinding
 import com.scaler.microblogs.utils.ArticleType
+import com.scaler.microblogs.viewmodels.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 

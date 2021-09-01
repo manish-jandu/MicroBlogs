@@ -1,4 +1,4 @@
-package com.scaler.microblogs.ui.account
+package com.scaler.microblogs.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

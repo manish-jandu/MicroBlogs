@@ -1,7 +1,6 @@
 package com.scaler.microblogs.ui.tags
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.scaler.microblogs.adapters.TagsAdapter
 import com.scaler.microblogs.databinding.FragmentTagsBinding
- import dagger.hilt.android.AndroidEntryPoint
+import com.scaler.microblogs.viewmodels.TagsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TagsFragment : Fragment() {
