@@ -7,7 +7,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.scaler.libconduit.models.Article
 import com.scaler.microblogs.data.AppPrefStorage
-import com.scaler.microblogs.data.AuthRepository
 import com.scaler.microblogs.data.Repository
 import com.scaler.microblogs.di.AuthModule
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    private val repo: Repository, private val authRepo: AuthRepository,
+    private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) : ViewModel() {
     private val _currentArticles = MutableLiveData<PagingData<Article>>()
@@ -26,8 +25,8 @@ class FeedViewModel @Inject constructor(
     private val feedEventChannel = Channel<FeedEvent>()
     val feedEvent = feedEventChannel.receiveAsFlow()
 
-    val globalArticles = repo.getFeeds().cachedIn(viewModelScope)
-    val feedArticles = authRepo.getCurrentUseFeed().cachedIn(viewModelScope)
+    val globalArticles = repo.remote.getFeeds().cachedIn(viewModelScope)
+    val feedArticles = repo.authRemote.getCurrentUseFeed().cachedIn(viewModelScope)
 
     fun getUserToken() = viewModelScope.launch {
         val token = appPrefStorage.getUserToken()
@@ -40,7 +39,7 @@ class FeedViewModel @Inject constructor(
     }
 
     sealed class FeedEvent {
-        object LoggedIn  : FeedEvent()
+        object LoggedIn : FeedEvent()
         object LoggedOut : FeedEvent()
     }
 }

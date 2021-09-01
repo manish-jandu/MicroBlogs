@@ -9,7 +9,6 @@ import androidx.paging.cachedIn
 import com.scaler.libconduit.models.Article
 import com.scaler.libconduit.models.User
 import com.scaler.microblogs.data.AppPrefStorage
-import com.scaler.microblogs.data.AuthRepository
 import com.scaler.microblogs.data.Repository
 import com.scaler.microblogs.di.AuthModule
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val authRepo: AuthRepository,
     private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) : ViewModel() {
@@ -46,11 +44,11 @@ class AccountViewModel @Inject constructor(
     }
 
     private fun getUserFavouriteArticle(userName: String) {
-        favouriteArticles = repo.getFeedByUserFavourite(userName).cachedIn(viewModelScope)
+        favouriteArticles = repo.remote.getFeedByUserFavourite(userName).cachedIn(viewModelScope)
     }
 
     private fun getUserArticles(userName: String) {
-        userArticles = repo.getFeedByUserName(userName).cachedIn(viewModelScope)
+        userArticles = repo.remote.getFeedByUserName(userName).cachedIn(viewModelScope)
     }
 
     fun signOut() {
@@ -60,7 +58,7 @@ class AccountViewModel @Inject constructor(
 
     private fun getCurrentUser() = viewModelScope.launch {
 
-        val result = authRepo.getCurrentUser()
+        val result = repo.authRemote.getCurrentUser()
         if (result.isSuccessful) {
             result.body()?.let {
                 _currentUser.postValue(it.user!!)

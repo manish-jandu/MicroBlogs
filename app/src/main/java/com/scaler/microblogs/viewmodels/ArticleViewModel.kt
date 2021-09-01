@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.scaler.libconduit.models.Article
 import com.scaler.libconduit.responses.MultipleCommentResponse
 import com.scaler.microblogs.data.AppPrefStorage
-import com.scaler.microblogs.data.AuthRepository
 import com.scaler.microblogs.data.Repository
 import com.scaler.microblogs.di.AuthModule
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArticleViewModel @Inject constructor(
-    private val authRepo: AuthRepository,
     private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) : ViewModel() {
@@ -47,7 +45,7 @@ class ArticleViewModel @Inject constructor(
 
     fun checkIfLoggedIn() = viewModelScope.launch {
         if (getUserToken()) {
-            val result = authRepo.getCurrentUser()
+            val result = repo.authRemote.getCurrentUser()
             if (result.isSuccessful) {
                 _isLoggedIn.postValue(true)
             } else {
@@ -59,11 +57,11 @@ class ArticleViewModel @Inject constructor(
     }
 
     fun deleteArticle(slug: String) = viewModelScope.launch {
-        authRepo.deleteArticle(slug)
+        repo.authRemote.deleteArticle(slug)
     }
 
     fun getArticleDataByRepo(slug: String) = viewModelScope.launch {
-        val result = repo.getArticleBySlug(slug)
+        val result = repo.remote.getArticleBySlug(slug)
         if (result.isSuccessful) {
             _article.postValue(result.body()!!.article!!)
         } else {
@@ -72,7 +70,7 @@ class ArticleViewModel @Inject constructor(
     }
 
     fun getArticleDataByAuthRepo(slug: String) = viewModelScope.launch {
-        val result = authRepo.getArticleBySlug(slug)
+        val result = repo.authRemote.getArticleBySlug(slug)
         if (result.isSuccessful) {
             _article.postValue(result.body()!!.article!!)
         } else {
@@ -81,7 +79,7 @@ class ArticleViewModel @Inject constructor(
     }
 
     fun getComments(slug: String) = viewModelScope.launch {
-        val result = repo.getCommentsBySlug(slug)
+        val result = repo.remote.getCommentsBySlug(slug)
         if (result.isSuccessful) {
             _comments.postValue(result.body())
         } else {
@@ -90,14 +88,14 @@ class ArticleViewModel @Inject constructor(
     }
 
     fun createComment(slug: String, body: String) = viewModelScope.launch {
-        val result = authRepo.createComment(slug, body)
+        val result = repo.authRemote.createComment(slug, body)
         if (result.isSuccessful) {
             getComments(slug)
         }
     }
 
     fun likeArticle(slug: String) = viewModelScope.launch {
-        authRepo.likeArticle(slug)
+        repo.authRemote.likeArticle(slug)
         getArticleAfterLikeDislike(slug)
     }
 
@@ -110,7 +108,7 @@ class ArticleViewModel @Inject constructor(
     }
 
     fun unlikeArticle(slug: String) = viewModelScope.launch {
-        authRepo.unlikeArticle(slug)
+        repo.authRemote.unlikeArticle(slug)
         getArticleAfterLikeDislike(slug)
     }
 

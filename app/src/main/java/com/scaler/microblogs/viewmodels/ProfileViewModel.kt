@@ -9,7 +9,6 @@ import androidx.paging.cachedIn
 import com.scaler.libconduit.models.Article
 import com.scaler.libconduit.models.Profile
 import com.scaler.microblogs.data.AppPrefStorage
-import com.scaler.microblogs.data.AuthRepository
 import com.scaler.microblogs.data.Repository
 import com.scaler.microblogs.di.AuthModule
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +20,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val authRepo: AuthRepository,
     private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) : ViewModel() {
@@ -54,31 +52,31 @@ class ProfileViewModel @Inject constructor(
         profileEventChannel.send(ProfileEvent.StartObserving)
     }
 
-     fun getProfileFromRepo(userName: String) =viewModelScope.launch {
-        val result = repo.getProfileByUserName(userName)
-        if(result.isSuccessful){
+    fun getProfileFromRepo(userName: String) = viewModelScope.launch {
+        val result = repo.remote.getProfileByUserName(userName)
+        if (result.isSuccessful) {
             _profile.postValue(result.body()?.profile!!)
         }
     }
 
-     fun getProfileFromAuthRepo(userName: String) =viewModelScope.launch {
-        val result = authRepo.getProfileByUserName(userName)
-        if(result.isSuccessful){
+    fun getProfileFromAuthRepo(userName: String) = viewModelScope.launch {
+        val result = repo.authRemote.getProfileByUserName(userName)
+        if (result.isSuccessful) {
             _profile.postValue(result.body()?.profile!!)
         }
     }
 
     private fun getUserFavouriteArticle(userName: String) {
-        favouriteArticles = repo.getFeedByUserFavourite(userName).cachedIn(viewModelScope)
+        favouriteArticles = repo.remote.getFeedByUserFavourite(userName).cachedIn(viewModelScope)
     }
 
     private fun getUserArticles(userName: String) {
-        userArticles = repo.getFeedByUserName(userName).cachedIn(viewModelScope)
+        userArticles = repo.remote.getFeedByUserName(userName).cachedIn(viewModelScope)
     }
 
     fun checkIfLoggedIn() = viewModelScope.launch {
         if (getUserToken()) {
-            val result = authRepo.getCurrentUser()
+            val result = repo.authRemote.getCurrentUser()
             if (result.isSuccessful) {
                 _isLoggedIn.postValue(true)
             } else {
@@ -89,15 +87,15 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun followUnfollowAccount(userName: String,isFollowing:Boolean) =viewModelScope.launch{
-        if(isFollowing){
-            val result = authRepo.unfollowAccount(userName)
-            if(result.isSuccessful){
+    fun followUnfollowAccount(userName: String, isFollowing: Boolean) = viewModelScope.launch {
+        if (isFollowing) {
+            val result = repo.authRemote.unfollowAccount(userName)
+            if (result.isSuccessful) {
                 _profile.postValue(result.body()?.profile!!)
             }
-        }else{
-            val result = authRepo.followAccount(userName)
-            if(result.isSuccessful){
+        } else {
+            val result = repo.authRemote.followAccount(userName)
+            if (result.isSuccessful) {
                 _profile.postValue(result.body()?.profile!!)
             }
         }

@@ -7,8 +7,7 @@ import com.scaler.libconduit.requests.*
 import com.scaler.microblogs.adapters.pagingadapters.CurrentUserFeedPagingSource
 import com.scaler.microblogs.di.AuthModule
 
-
-class AuthRepository() {
+class AuthRemoteDataSource() {
     private val authApi = AuthModule.authApi
 
     suspend fun getCurrentUser() = authApi.getCurrentUser()

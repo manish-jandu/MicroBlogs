@@ -29,7 +29,7 @@ class AuthViewModel @Inject constructor(
     fun login(email: String?, password: String?) {
         viewModelScope.launch {
             if (isEmailCorrect(email) && isPasswordInCorrectFormat(password)) {
-                val response = repo.login(email!!, password!!)
+                val response = repo.remote.login(email!!, password!!)
 
                 if (isLoginSignUpSuccessful(response)) {
                     response.body()?.let {
@@ -44,7 +44,7 @@ class AuthViewModel @Inject constructor(
     fun signUp(userName: String?, email: String?, password: String?) =
         viewModelScope.launch {
             if (isEmailCorrect(email) && isUserNamePasswordCorrect(userName, password)) {
-                val response = repo.signup(userName!!, email!!, password!!)
+                val response = repo.remote.signup(userName!!, email!!, password!!)
 
                 if (isLoginSignUpSuccessful(response)) {
                     response.body()?.let {

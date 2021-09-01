@@ -12,11 +12,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TagsFeedViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
-     lateinit var articleByTag: LiveData<PagingData<Article>>
+    lateinit var articleByTag: LiveData<PagingData<Article>>
 
 
     fun getArticlesByTag(tag: String) {
-        articleByTag = repo.getFeedByTag(tag).cachedIn(viewModelScope)
+        articleByTag = repo.remote.getFeedByTag(tag).cachedIn(viewModelScope)
     }
 
 

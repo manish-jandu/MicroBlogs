@@ -2,8 +2,7 @@ package com.scaler.microblogs.di
 
 
 import com.scaler.libconduit.apis.ConduitApi
-import com.scaler.microblogs.data.AuthRepository
-import com.scaler.microblogs.data.Repository
+import com.scaler.microblogs.data.AuthRemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,8 +16,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object MainModule {
-
-    var authToken: String? = null
 
     @Provides
     @Singleton
@@ -47,11 +44,7 @@ object MainModule {
         retrofit.create(ConduitApi::class.java)
 
     @Provides
-    @Singleton
-    fun providesRepository(
-        api: ConduitApi
-    ) = Repository(api)
+    fun providesAuthRemoteDataSource() = AuthRemoteDataSource()
 
-    @Provides
-    fun providesAuthRepository() = AuthRepository()
+
  }

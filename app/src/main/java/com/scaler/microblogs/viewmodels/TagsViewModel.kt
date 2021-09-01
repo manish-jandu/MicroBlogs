@@ -17,7 +17,7 @@ class TagsViewModel @Inject constructor(
     val tags: LiveData<List<String>> = _tags
 
     fun getTags() = viewModelScope.launch {
-        val result = repo.getTags()
+        val result = repo.remote.getTags()
         result.body()!!.tags?.let {
             _tags.postValue(it)
         }

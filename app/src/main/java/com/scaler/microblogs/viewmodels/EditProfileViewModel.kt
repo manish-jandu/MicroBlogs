@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.scaler.libconduit.models.User
 import com.scaler.microblogs.data.AppPrefStorage
-import com.scaler.microblogs.data.AuthRepository
+import com.scaler.microblogs.data.Repository
 import com.scaler.microblogs.di.AuthModule
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +19,7 @@ private const val TAG = "EditProfileViewModel"
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
-    private val authRepo: AuthRepository,
+    private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) : ViewModel() {
     private val _currentUser = MutableLiveData<User>()
@@ -39,7 +39,7 @@ class EditProfileViewModel @Inject constructor(
     }
 
     fun getCurrentUser() = viewModelScope.launch {
-        val result = authRepo.getCurrentUser()
+        val result = repo.authRemote.getCurrentUser()
         if (result.isSuccessful) {
             result.body()?.let {
                 _currentUser.postValue(it.user!!)
@@ -56,18 +56,24 @@ class EditProfileViewModel @Inject constructor(
         email: String?,
         password: String?
     ) = viewModelScope.launch {
-        try{
+        try {
             if (isEmailCorrect(email) && isUserNamePasswordCorrect(username, password)) {
                 val response =
-                    authRepo.updateUserDetails(username!!, password!!, email!!, imageUrl, bio)
+                    repo.authRemote.updateUserDetails(
+                        username!!,
+                        password!!,
+                        email!!,
+                        imageUrl,
+                        bio
+                    )
 
                 if (response.isSuccessful) {
                     editProfileEventChannel.send(EditProfileEvent.SuccessFullyUpdatedData)
-                }else{
+                } else {
                     editProfileEventChannel.send(EditProfileEvent.ErrorInUpdatingData)
                 }
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Log.i(TAG, "updateUserData:e $e ")
         }
 

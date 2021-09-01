@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.scaler.libconduit.models.Article
 import com.scaler.microblogs.data.AppPrefStorage
-import com.scaler.microblogs.data.AuthRepository
 import com.scaler.microblogs.data.Repository
 import com.scaler.microblogs.di.AuthModule
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditArticleViewModel @Inject constructor(
-    private val authRepo: AuthRepository,
     private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) :
@@ -43,23 +41,23 @@ class AddEditArticleViewModel @Inject constructor(
             if (title.isEmpty() || description.isEmpty() || body.isEmpty() || tags.isEmpty()) {
                 addEditArticleChannel.send(AddEditArticleEvent.DataIsEmpty)
             } else {
-                if(getUserToken()){
+                if (getUserToken()) {
                     val tagsList = tags.split(",")
-                    val result = authRepo.createArticle(title, description, body, tagsList)
+                    val result = repo.authRemote.createArticle(title, description, body, tagsList)
                     if (result.isSuccessful) {
                         addEditArticleChannel.send(AddEditArticleEvent.ArticleCreated)
 
                     } else {
                         addEditArticleChannel.send(AddEditArticleEvent.Error)
                     }
-                }else{
+                } else {
                     addEditArticleChannel.send(AddEditArticleEvent.LoggedOut)
                 }
             }
         }
 
     fun getArticleData(slug: String) = viewModelScope.launch {
-        val result = repo.getArticleBySlug(slug)
+        val result = repo.remote.getArticleBySlug(slug)
         if (result.isSuccessful) {
             _article.postValue(result.body()!!.article!!)
         }
