@@ -8,9 +8,8 @@ import com.scaler.libconduit.requests.UserLoginData
 import com.scaler.libconduit.requests.UserLoginRequest
 import com.scaler.libconduit.requests.UserSignupData
 import com.scaler.libconduit.requests.UserSignupRequest
-import com.scaler.microblogs.adapters.FeedPagingSource
+import com.scaler.microblogs.adapters.pagingadapters.*
 import com.scaler.microblogs.di.AuthModule
-import com.scaler.microblogs.utils.FeedType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,10 +27,8 @@ class Repository @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                FeedPagingSource(
+                GlobalFeedPagingSource(
                     api,
-                    authApi,
-                    feedType = FeedType.GLOBAL_FEED
                 )
             }
         ).liveData
@@ -44,7 +41,9 @@ class Repository @Inject constructor(
             maxSize = 100,
             enablePlaceholders = false
         ),
-        pagingSourceFactory = { FeedPagingSource(api, authApi, tag, feedType = FeedType.TAG_FEED) }
+        pagingSourceFactory = {
+            TagsFeedPagingSource(api, tag)
+        }
     ).liveData
 
     fun getCurrentUseFeed() = Pager(
@@ -54,10 +53,8 @@ class Repository @Inject constructor(
             enablePlaceholders = false
         ),
         pagingSourceFactory = {
-            FeedPagingSource(
-                api,
+            CurrentUserFeedPagingSource(
                 authApi,
-                feedType = FeedType.CURRENT_USER_FEED
             )
         }
     ).liveData
@@ -69,11 +66,9 @@ class Repository @Inject constructor(
             enablePlaceholders = false
         ),
         pagingSourceFactory = {
-            FeedPagingSource(
+            ProfileFeedPagingSource(
                 api,
-                authApi,
                 userName = userName,
-                feedType = FeedType.PROFILE_FEED
             )
         }
     ).liveData
@@ -85,11 +80,9 @@ class Repository @Inject constructor(
             enablePlaceholders = false
         ),
         pagingSourceFactory = {
-            FeedPagingSource(
+            FavouriteFeedPagingSource(
                 api,
-                authApi,
                 userName = userName,
-                feedType = FeedType.PROFILE_FAVOURITE_FEED
             )
         }
     ).liveData
