@@ -5,10 +5,14 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.scaler.microblogs.R
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentFavouriteArticlesBinding
+import com.scaler.microblogs.ui.account.AccountFragmentDirections
 import com.scaler.microblogs.utils.ArticleType
 import com.scaler.microblogs.viewmodels.AccountViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -46,11 +50,13 @@ class FavouriteArticlesFragment : Fragment(R.layout.fragment_favourite_articles)
 
     inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
         override fun onItemClick(slug: String, articleType: ArticleType) {
-
+            val action = AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
+            findNavController().navigate(action)
         }
 
         override fun onProfileClick(userName: String) {
-
+            val action = AccountFragmentDirections.actionNavAccountToProfileFragment(userName)
+            findNavController().navigate(action)
         }
     }
 
@@ -60,4 +66,8 @@ class FavouriteArticlesFragment : Fragment(R.layout.fragment_favourite_articles)
         _binding = null
     }
 
+}
+
+fun NavController.safeNavigate(direction: NavDirections) {
+    currentDestination?.getAction(direction.actionId)?.run { navigate(direction) }
 }

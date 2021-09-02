@@ -5,10 +5,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.scaler.microblogs.R
 import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentUserArticlesBinding
+import com.scaler.microblogs.ui.account.AccountFragmentDirections
 import com.scaler.microblogs.utils.ArticleType
 import com.scaler.microblogs.viewmodels.AccountViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -46,11 +48,13 @@ class UserArticlesFragment : Fragment(R.layout.fragment_user_articles) {
 
     inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
         override fun onItemClick(slug: String, articleType: ArticleType) {
-
+            val action = AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
+            findNavController().navigate(action)
         }
 
         override fun onProfileClick(userName: String) {
-
+            val action = AccountFragmentDirections.actionNavAccountToProfileFragment(userName)
+            findNavController().navigate(action)
         }
     }
 
