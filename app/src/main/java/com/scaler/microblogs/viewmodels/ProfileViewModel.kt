@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.scaler.libconduit.models.Article
 import com.scaler.libconduit.models.Profile
 import com.scaler.microblogs.data.AppPrefStorage
@@ -67,11 +66,11 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getUserFavouriteArticle(userName: String) {
-        favouriteArticles = repo.remote.getFeedByUserFavourite(userName).cachedIn(viewModelScope)
+        //favouriteArticles = repo.remote.getFeedByUserFavourite(userName).cachedIn(viewModelScope)
     }
 
     private fun getUserArticles(userName: String) {
-        userArticles = repo.remote.getFeedByUserName(userName).cachedIn(viewModelScope)
+       // userArticles = repo.remote.getFeedByUserName(userName).cachedIn(viewModelScope)
     }
 
     fun checkIfLoggedIn() = viewModelScope.launch {

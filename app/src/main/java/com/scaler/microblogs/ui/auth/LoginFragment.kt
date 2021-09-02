@@ -41,6 +41,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 toggleProgressBar()
                 AuthModule.authToken = it.token
                 viewModel.setNewUserToken(it.token!!)
+                viewModel.setUserName(it.username!!)
                 findNavController().navigateUp()
             }
         }

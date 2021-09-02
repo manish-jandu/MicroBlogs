@@ -54,7 +54,7 @@ class RemoteDataSource @Inject constructor(
                 userName = userName,
             )
         }
-    ).liveData
+    ).flow
 
     fun getFeedByUserFavourite(userName: String) = Pager(
         config = PagingConfig(
@@ -68,7 +68,7 @@ class RemoteDataSource @Inject constructor(
                 userName = userName,
             )
         }
-    ).liveData
+    ).flow
 
     fun getFeeds() =
         Pager(

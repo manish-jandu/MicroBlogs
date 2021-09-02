@@ -47,6 +47,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 Log.i("SignupFragment", "onViewCreated: ${it.token}")
                 AuthModule.authToken = it.token
                 viewModel.setNewUserToken(it.token!!)
+                viewModel.setUserName(it.username!!)
                 findNavController().navigateUp()
             }
         }

@@ -100,6 +100,10 @@ class AuthViewModel @Inject constructor(
         appPrefStorage.setUserToken(token)
     }
 
+    fun setUserName(username: String)=viewModelScope.launch {
+        appPrefStorage.setUserName(username)
+    }
+
 
     sealed class AuthEvent {
         object ErrorInEmail : AuthEvent()
