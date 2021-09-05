@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
 import android.net.NetworkRequest
 import android.util.Log
@@ -52,16 +53,7 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
 
             if (hasInternetCapability == true) {
                 // check if this network actually has internet
-                CoroutineScope(Dispatchers.IO).launch {
-                    val hasInternet = DoesNetworkHaveInternet.execute()
-                    if(hasInternet){
-                        Log.d(TAG,"has Internet $hasInternet")
-                        withContext(Dispatchers.Main){
-                            validNetworks.add(network)
-                            checkValidNetworks()
-                        }
-                    }
-                }
+                determineInternetAccess(network)
             }
         }
         override fun onLost(network: Network) {
@@ -70,6 +62,32 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
             checkValidNetworks()
         }
 
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities
+        ) {
+            super.onCapabilitiesChanged(network, networkCapabilities)
+            if (networkCapabilities.hasCapability(NET_CAPABILITY_INTERNET)){
+                determineInternetAccess(network)
+                print("")
+            } else {
+                validNetworks.remove(network)
+                checkValidNetworks()
+            }
+        }
+
+        private fun determineInternetAccess(network: Network) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val hasInternet = DoesNetworkHaveInternet.execute()
+                if(hasInternet){
+                    Log.d(TAG,"has Internet $hasInternet")
+                    withContext(Dispatchers.Main){
+                        validNetworks.add(network)
+                        checkValidNetworks()
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -94,14 +94,13 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 Toast.makeText(requireContext(), "No Internet Connection.", Toast.LENGTH_SHORT)
                     .show()
             } else if (isInternetAvailable == true && currentUserStatus == CurrentUserStatus.LoggedIn) {
-                //setViewCurrentlyLoggedIn()
+                setViewCurrentlyLoggedIn()
             } else if (isInternetAvailable == true && currentUserStatus == CurrentUserStatus.LoggedOut) {
                 setViewCurrentlyLoggedOut()
             }
 
         }
     }
-
 
     private fun getCurrentUserData() {
         accountViewModel.getCurrentUser()
