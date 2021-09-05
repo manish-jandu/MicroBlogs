@@ -16,14 +16,22 @@
             android:id="@+id/group_currently_logged_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:constraint_referenced_ids="text_view_please_login_sign_up,button_login,button_signup" />
+
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="image_view_error,text_view_error" />
 
     <TextView
             android:id="@+id/text_view_please_login_sign_up"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please Login or Sign up to Continue"
+            android:text="@string/please_login_or_sign_up_to_continue"
             android:padding="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textSize="18sp"
@@ -31,11 +39,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/button_login"
-            android:text="Login"
+            android:text="@string/login"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,11 +54,12 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_signup"
             app:layout_constraintTop_toBottomOf="@+id/text_view_please_login_sign_up"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0"
+            tools:visibility="gone" />
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/button_signup"
-            android:text="Sign up"
+            android:text="@string/sign_up"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,7 +69,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_please_login_sign_up"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0"
+            tools:visibility="gone" />
 
     <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -73,44 +84,47 @@
 
         <ImageView
                 android:id="@+id/image_view_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
+                android:contentDescription="@string/user_profile_image"
                 tools:srcCompat="@tools:sample/avatars" />
     </androidx.cardview.widget.CardView>
 
     <TextView
             android:id="@+id/text_view_user_name"
-            android:text=""
-            android:layout_width="wrap_content"
+            android:text="@string/username"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textStyle="bold"
             android:layout_marginStart="32dp"
             android:layout_marginTop="52dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView"
             app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
             android:id="@+id/text_view_user_email"
-            android:text=""
-            android:layout_width="wrap_content"
+            android:text="@string/email_email_com"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textStyle="bold"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="32dp"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_user_name"
-            tools:layout_editor_absoluteY="140dp" />
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_view_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_user_name" />
 
     <TextView
             android:id="@+id/text_view_user_bio"
-            android:text=""
-            android:layout_width="match_parent"
+            android:text="@string/this_is_a_bio"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
@@ -118,16 +132,16 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="188dp"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_view_user_email"
             app:layout_constraintTop_toBottomOf="@+id/text_view_user_email" />
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/button_edit_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit"
+            android:text="@string/edit"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toStartOf="@+id/button_sign_out"
             app:layout_constraintHorizontal_bias="0.5"
@@ -138,13 +152,11 @@
             android:id="@+id/button_sign_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign out"
-            android:layout_marginTop="32dp"
+            android:text="@string/sign_out"
             app:layout_constraintBaseline_toBaselineOf="@+id/button_edit_profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button_edit_profile"
-            app:layout_constraintTop_toBottomOf="@+id/cardView" />
+            app:layout_constraintStart_toEndOf="@+id/button_edit_profile" />
 
     <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_layout_current_user"
@@ -164,6 +176,45 @@
             app:layout_constraintTop_toBottomOf="@+id/tabs_layout_current_user"
             app:layout_constraintVertical_bias="1.0"
             tools:layout_editor_absoluteX="0dp" />
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+            android:id="@+id/image_view_error"
+            android:src="@drawable/ic_sad"
+            android:alpha="0.8"
+            android:layout_width="80dp"
+            android:visibility="gone"
+            android:layout_height="80dp"
+            android:contentDescription="@string/error_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+
+    <TextView
+            android:id="@+id/text_view_error"
+            android:text="@string/something_went_wrong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:alpha="0.8"
+            android:layout_marginTop="13dp"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_error"
+            app:layout_constraintStart_toStartOf="@+id/image_view_error"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_error" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

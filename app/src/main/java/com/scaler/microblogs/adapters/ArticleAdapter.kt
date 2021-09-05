@@ -39,12 +39,14 @@ class ArticleAdapter(
         private val userName = binding.textViewUserName
         private val description = binding.textViewDescription
         private val profilePhoto = binding.imageViewProfile
+        private val body = binding.textViewBody
         private val time = binding.textViewTime
         private val root = binding.root
 
         fun bind(item: Article) {
             userName.text = item.author?.username
             description.text = item.description
+            body.text = item.body
             time.text =formattedTime(item.updatedAt!!)
 
             Glide.with(profilePhoto)

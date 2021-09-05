@@ -3,4 +3,15 @@
     <string name="title_feed">Feed</string>
     <string name="title_tags">Tags</string>
     <string name="title_account">Account</string>
+    <string name="please_login_or_sign_up_to_continue">Please Login or Sign up to Continue</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign up</string>
+    <string name="username">UserName</string>
+    <string name="email_email_com">email@email.com</string>
+    <string name="this_is_a_bio">This is a bio.</string>
+    <string name="edit">Edit</string>
+    <string name="sign_out">Sign out</string>
+    <string name="user_profile_image">user profile image.</string>
+    <string name="something_went_wrong">Something went wrong.</string>
+    <string name="error_image">Error image</string>
 </resources>
