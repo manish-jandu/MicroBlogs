@@ -14,4 +14,9 @@
     <string name="user_profile_image">user profile image.</string>
     <string name="something_went_wrong">Something went wrong.</string>
     <string name="error_image">Error image</string>
+    <string name="save">Save</string>
+    <string name="enter_tags_separating_with">Enter Tags(separating with ,)</string>
+    <string name="write_your_article_in_markdown">Write your Article(in markdown)</string>
+    <string name="about">About</string>
+    <string name="title">Title</string>
 </resources>

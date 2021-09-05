@@ -16,10 +16,13 @@ import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentAddEditArticleBinding
 import com.scaler.microblogs.utils.Constants.EDITED_ARTICLE
 import com.scaler.microblogs.utils.Constants.FRAGMENT_ADD_EDIT_RESULT_REQUEST_KEY
+import com.scaler.microblogs.utils.InternetConnectivity.ConnectivityManager
+import com.scaler.microblogs.utils.NetworkResult
 import com.scaler.microblogs.viewmodels.AddEditArticleViewModel
 import com.scaler.microblogs.viewmodels.AddEditArticleViewModel.AddEditArticleEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddEditArticleFragment : Fragment(R.layout.fragment_add_edit_article) {
@@ -29,34 +32,73 @@ class AddEditArticleFragment : Fragment(R.layout.fragment_add_edit_article) {
     private val binding get() = _binding!!
     private val args: AddEditArticleFragmentArgs by navArgs()
 
+    @Inject
+    lateinit var connectivityManager: ConnectivityManager
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentAddEditArticleBinding.bind(view)
+        setViewLoadingScreen()
 
         val slug: String? = args.slug
-
-        if (!slug.isNullOrEmpty()) {
-            addEditArticleViewModel.getArticleData(slug)
+        if (slug == null || slug.isEmpty()) {
+            setViewArticleScreen()
         }
 
         binding.buttonSubmitArticle.setOnClickListener {
             submitArticle()
         }
 
-        addEditArticleViewModel.article.observe(viewLifecycleOwner) {
-            it?.let {
-                setArticleData(it)
+        observeInternetConnection(slug)
+        handleArticleEvents()
+    }
+
+    private fun getArticleData(slug: String) {
+        addEditArticleViewModel.getArticleData(slug)
+        addEditArticleViewModel.article.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    setViewArticleScreen()
+                    setArticleData(response.data!!)
+                }
+                is NetworkResult.Loading -> {
+                    setViewLoadingScreen()
+                }
+                is NetworkResult.Error -> {
+                    setViewErrorScreen(response.message.toString())
+                }
             }
         }
+    }
 
+    private fun setArticleData(article: Article) {
+        val tags: String? = article.tagList?.joinToString(",")
+        binding.apply {
+            editTextArticleTitle.editText!!.setText(article.title)
+            editTextArticleAbout.editText!!.setText(article.description)
+            editTextArticleBody.editText!!.setText(article.body)
+            editTextArticleTags.editText!!.setText(tags ?: "")
+        }
+    }
+
+    private fun observeInternetConnection(slug: String?) {
+        connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) { it ->
+            addEditArticleViewModel.isInternetAvailable = it
+            it?.let {
+                if (slug != null && slug.isNotEmpty()) {
+                    getArticleData(slug)
+                }
+            }
+        }
+    }
+
+    private fun handleArticleEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             addEditArticleViewModel.addEditArticleEvent.collect { event ->
                 when (event) {
-                    is AddEditArticleEvent.DataIsEmpty -> {
-                        showSnackBar("No Field should be Empty!")
-                    }
                     is AddEditArticleEvent.ArticleCreated -> {
+                        hideLoading()
                         setFragmentResult(
                             FRAGMENT_ADD_EDIT_RESULT_REQUEST_KEY,
                             bundleOf(EDITED_ARTICLE to true)
@@ -64,36 +106,70 @@ class AddEditArticleFragment : Fragment(R.layout.fragment_add_edit_article) {
                         findNavController().navigateUp()
                     }
                     is AddEditArticleEvent.Error -> {
-                        showSnackBar("Something went wrong please try again")
+                        hideLoading()
+                        showSnackBar(event.errorMessage)
                     }
-                    is AddEditArticleEvent.LoggedOut->{
-                        Toast.makeText(requireContext(),"Login to create Article.",Toast.LENGTH_SHORT).show()
+                    is AddEditArticleEvent.LoggedOut -> {
+                        hideLoading()
+                        Toast.makeText(
+                            requireContext(),
+                            "Login to create Article.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         findNavController().navigateUp()
+                    }
+                    AddEditArticleEvent.Loading -> {
+                        showLoading()
+                        //binding.buttonSubmitArticle.oclic
                     }
                 }
             }
         }
     }
 
-    private fun setArticleData(article: Article) {
-        binding.apply {
-            editTextArticleTitle.setText(article.title)
-            editTextArticleAbout.setText(article.description)
-            editTextArticleBody.setText(article.body)
-            val tags: String? = article.tagList?.joinToString(",")
-            editTextArticleTags.setText(tags ?: "")
-        }
-    }
 
     private fun submitArticle() {
         binding.apply {
-            val title = editTextArticleTitle.text.toString().trim()
-            val description = editTextArticleAbout.text.toString().trim()
-            val body = editTextArticleBody.text.toString().trim()
-            val tags = editTextArticleTags.text.toString()
+            val title = editTextArticleTitle.editText!!.text.toString().trim()
+            val description = editTextArticleAbout.editText!!.text.toString().trim()
+            val body = editTextArticleBody.editText!!.text.toString().trim()
+            val tags = editTextArticleTags.editText!!.text.toString()
 
             addEditArticleViewModel.createArticle(title, description, body, tags)
         }
+    }
+
+    private fun setViewLoadingScreen() {
+        showLoading()
+        binding.apply {
+            groupShowArticle.visibility = View.GONE
+            groupError.visibility = View.GONE
+        }
+    }
+
+    private fun setViewErrorScreen(message: String) {
+        hideLoading()
+        binding.apply {
+            groupShowArticle.visibility = View.GONE
+            groupError.visibility = View.VISIBLE
+            textViewError.text = message
+        }
+    }
+
+    private fun setViewArticleScreen() {
+        hideLoading()
+        binding.apply {
+            groupShowArticle.visibility = View.VISIBLE
+            groupError.visibility = View.GONE
+        }
+    }
+
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding.progressBar.visibility = View.GONE
     }
 
     private fun showSnackBar(message: String) {
