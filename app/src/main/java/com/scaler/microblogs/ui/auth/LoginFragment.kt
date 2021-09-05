@@ -9,76 +9,96 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentLoginBinding
-import com.scaler.microblogs.di.AuthModule
+import com.scaler.microblogs.utils.InternetConnectivity.ConnectivityManager
+import com.scaler.microblogs.utils.NetworkResult
 import com.scaler.microblogs.viewmodels.AuthViewModel
 import com.scaler.microblogs.viewmodels.AuthViewModel.AuthEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private val viewModel: AuthViewModel by viewModels()
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private var isProgressBarVisible: Boolean = false
 
+    @Inject
+    lateinit var connectivityManager: ConnectivityManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLoginBinding.bind(view)
+
+        setupLoginButton()
+        observeInternetConnection()
+        observeUser()
+        observeEvents()
+    }
+
+    private fun setupLoginButton() {
         binding.apply {
             buttonSubmitLogin.setOnClickListener {
-                toggleProgressBar()
-                val email = editTextLoginEmail.text.toString().trim()
-                val password = editTextLoginPassword.text.toString().trim()
-
+                val email = editTextLoginEmail.editText?.text.toString().trim()
+                val password = editTextLoginPassword.editText?.text.toString().trim()
                 viewModel.login(email, password)
             }
         }
+    }
 
-        viewModel.user.observe(viewLifecycleOwner) {
-            it?.let {
-                toggleProgressBar()
-                AuthModule.authToken = it.token
-                viewModel.setNewUserToken(it.token!!)
-                viewModel.setUserName(it.username!!)
-                findNavController().navigateUp()
+    private fun observeInternetConnection() {
+        connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) {
+            viewModel.isInternetAvailable = it
+        }
+    }
+
+    private fun observeUser() {
+        viewModel.user.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is NetworkResult.Success -> {
+                    viewModel.setUserDataInPreferences(result.data!!)
+                    hideLoading()
+                }
+                is NetworkResult.Loading -> {
+                    showLoading()
+                }
+                is NetworkResult.Error -> {
+                    hideLoading()
+                    //pass message ="" if just want to hide loading
+                    showSnackBar(result.message.toString())
+                }
             }
         }
+    }
 
+    private fun observeEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-
             viewModel.authEvent.collect { event ->
                 when (event) {
-                    is AuthEvent.ErrorInEmail -> {
-                        toggleProgressBar()
-                        snackBar("Enter Correct email.")
-                    }
-                    is AuthEvent.ErrorInLoginPassword -> {
-                        toggleProgressBar()
-                        snackBar("Enter Password")
-                    }
-                    is AuthEvent.ErrorInLoginOrSignUp -> {
-                        toggleProgressBar()
-                        snackBar("Error Logging in, Please try again")
+                    AuthEvent.SetUserDataSuccess -> {
+                        findNavController().navigateUp()
                     }
                 }
             }
         }
     }
 
-    private fun snackBar(message: String) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
+    private fun showLoading() {
+        binding.apply {
+            progressCircular.visibility = View.VISIBLE
+            buttonSubmitLogin.visibility = View.GONE
+        }
     }
 
-    private fun toggleProgressBar() {
-        isProgressBarVisible = !isProgressBarVisible
-        binding.progressCircularSignUp.visibility =
-            if (isProgressBarVisible) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+    private fun hideLoading() {
+        binding.apply {
+            progressCircular.visibility = View.GONE
+            buttonSubmitLogin.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

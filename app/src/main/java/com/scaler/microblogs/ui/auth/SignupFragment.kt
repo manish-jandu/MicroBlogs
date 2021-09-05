@@ -2,20 +2,15 @@ package com.scaler.microblogs.ui.auth
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentSignupBinding
-import com.scaler.microblogs.di.AuthModule
 import com.scaler.microblogs.viewmodels.AuthViewModel
-import com.scaler.microblogs.viewmodels.AuthViewModel.AuthEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
@@ -30,46 +25,46 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSignupBinding.bind(view)
 
-        binding.apply {
-            buttonSubmitSignup.setOnClickListener {
-                toggleProgressBar()
-                val email = editTextSignupEmail.text.toString().trim()
-                val userName = editTextSignupUsername.text.toString().trim()
-                val password = editTextSignupPassword.text.toString().trim()
-
-                viewModel.signUp(userName, email, password)
-            }
-        }
+//        binding.apply {
+//            buttonSubmitSignup.setOnClickListener {
+//                toggleProgressBar()
+//                val email = editTextSignupEmail.text.toString().trim()
+//                val userName = editTextSignupUsername.text.toString().trim()
+//                val password = editTextSignupPassword.text.toString().trim()
+//
+//                viewModel.signUp(userName, email, password)
+//            }
+//        }
 
         viewModel.user.observe(viewLifecycleOwner) {
-            it?.let {
-                toggleProgressBar()
-                Log.i("SignupFragment", "onViewCreated: ${it.token}")
-                AuthModule.authToken = it.token
-                viewModel.setNewUserToken(it.token!!)
-                viewModel.setUserName(it.username!!)
-                findNavController().navigateUp()
-            }
+//            it?.let {
+//                toggleProgressBar()
+//                Log.i("SignupFragment", "onViewCreated: ${it.token}")
+//                AuthModule.authToken = it.token
+//                viewModel.setNewUserToken(it.token!!)
+//                viewModel.setUserName(it.username!!)
+//                findNavController().navigateUp()
+//            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
 
-            viewModel.authEvent.collect { event ->
-                when (event) {
-                    is AuthEvent.ErrorInUserNameAndPassword -> {
-                        toggleProgressBar()
-                        snackBar("Enter Correct user name or password.")
-                    }
-                    is AuthEvent.ErrorInEmail -> {
-                        toggleProgressBar()
-                        snackBar("Enter Correct email.")
-                    }
-                    is AuthEvent.ErrorInLoginOrSignUp -> {
-                        toggleProgressBar()
-                        snackBar("Error Signing up, Please try again")
-                    }
-                }
-            }
+//            viewModel.authEvent.collect { event ->
+//                when (event) {
+//                    is AuthEvent.ErrorInUserNameAndPassword -> {
+//                        toggleProgressBar()
+//                        snackBar("Enter Correct user name or password.")
+//                    }
+//                    is AuthEvent.ErrorInEmail -> {
+//                        toggleProgressBar()
+//                        snackBar("Enter Correct email.")
+//                    }
+//                    is AuthEvent.ErrorInLoginOrSignUp -> {
+//                        toggleProgressBar()
+//                        snackBar("Error Signing up, Please try again")
+//                    }
+//                }
+//            }
         }
 
     }

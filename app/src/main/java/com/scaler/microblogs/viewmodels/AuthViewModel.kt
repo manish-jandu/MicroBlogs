@@ -8,7 +8,10 @@ import com.scaler.libconduit.models.User
 import com.scaler.libconduit.responses.UserResponse
 import com.scaler.microblogs.data.AppPrefStorage
 import com.scaler.microblogs.data.Repository
+import com.scaler.microblogs.di.AuthModule
+import com.scaler.microblogs.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -20,95 +23,89 @@ class AuthViewModel @Inject constructor(
     private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) : ViewModel() {
-    private val _user = MutableLiveData<User?>()
-    val user: LiveData<User?> = _user
+    var isInternetAvailable: Boolean? = null
+
+    private val _user = MutableLiveData<NetworkResult<User>>()
+    val user: LiveData<NetworkResult<User>> = _user
 
     private val authEventChannel = Channel<AuthEvent>()
     val authEvent = authEventChannel.receiveAsFlow()
 
-    fun login(email: String?, password: String?) {
-        viewModelScope.launch {
-            if (isEmailCorrect(email) && isPasswordInCorrectFormat(password)) {
-                val response = repo.remote.login(email!!, password!!)
-
-                if (isLoginSignUpSuccessful(response)) {
-                    response.body()?.let {
-                        _user.postValue(it.user)
-                    }
-
+    fun login(email: String?, password: String?) = viewModelScope.launch(Dispatchers.IO) {
+        _user.postValue(NetworkResult.Loading())
+        if (hasInternetConnection()) {
+            try {
+                if (checkEmailFormat(email) && checkPasswordFormat(password)) {
+                    val response = repo.remote.login(email!!, password!!)
+                    _user.postValue(handleLoginResponse(response))
                 }
+            } catch (e: Exception) {
+                _user.postValue(NetworkResult.Error(e.message.toString()))
             }
-        }
-    }
-
-    fun signUp(userName: String?, email: String?, password: String?) =
-        viewModelScope.launch {
-            if (isEmailCorrect(email) && isUserNamePasswordCorrect(userName, password)) {
-                val response = repo.remote.signup(userName!!, email!!, password!!)
-
-                if (isLoginSignUpSuccessful(response)) {
-                    response.body()?.let {
-                        _user.postValue(it.user)
-                    }
-
-                }
-            }
-        }
-
-    private suspend fun isUserNamePasswordCorrect(userName: String?, password: String?): Boolean {
-        return if (userName.isNullOrEmpty() || password.isNullOrEmpty()) {
-            authEventChannel.send(AuthEvent.ErrorInUserNameAndPassword)
-            false
         } else {
-            true
+            _user.postValue(NetworkResult.Error("No Internet Connection."))
         }
     }
 
-    private suspend fun isPasswordInCorrectFormat(password: String?): Boolean {
+    private fun handleLoginResponse(response: Response<UserResponse>): NetworkResult<User> {
+        return when {
+            response.message().contains("timeout") -> {
+                NetworkResult.Error("Timeout")
+            }
+            response.code() == 422 -> {
+                NetworkResult.Error("Email or Password is wrong.")
+            }
+            response.body()?.user == null -> {
+                NetworkResult.Error("User not found")
+            }
+            response.isSuccessful -> {
+                val result = response.body()!!.user!!
+                NetworkResult.Success(result)
+            }
+            else -> {
+                NetworkResult.Error(response.message())
+            }
+        }
+    }
+
+    private fun checkPasswordFormat(password: String?): Boolean {
         return if (password.isNullOrEmpty()) {
-            authEventChannel.send(AuthEvent.ErrorInLoginPassword)
+            _user.postValue(NetworkResult.Error("Password cannot be empty."))
             false
         } else {
             true
         }
     }
 
-    private suspend fun isEmailCorrect(email: String?): Boolean {
-        return if (isEmailValid(email)) {
-            true
+    private fun checkEmailFormat(email: String?): Boolean {
+        return if (email != null && email.isNotEmpty()) {
+            if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                true
+            } else {
+                _user.postValue(NetworkResult.Error("Email is not in correct format."))
+                false
+            }
         } else {
-            authEventChannel.send(AuthEvent.ErrorInEmail)
+            _user.postValue(NetworkResult.Error("Email cannot be empty."))
             false
         }
     }
 
-    private fun isEmailValid(email: String?): Boolean {
-        return !email.isNullOrEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email)
-            .matches()
+    fun setUserDataInPreferences(user: User) = viewModelScope.launch(Dispatchers.IO) {
+        AuthModule.authToken = user.token
+        appPrefStorage.setUserToken(user.token!!)
+        appPrefStorage.setUserName(user.username!!)
+        authEventChannel.send(AuthEvent.SetUserDataSuccess)
     }
 
-    private suspend fun isLoginSignUpSuccessful(result: Response<UserResponse>): Boolean {
-        return if (result.isSuccessful) {
-            true
-        } else {
-            authEventChannel.send(AuthEvent.ErrorInLoginOrSignUp)
-            false
+    private fun hasInternetConnection(): Boolean {
+        if (isInternetAvailable != null) {
+            return isInternetAvailable as Boolean
         }
+        return false
     }
-
-    fun setNewUserToken(token: String) {
-        appPrefStorage.setUserToken(token)
-    }
-
-    fun setUserName(username: String)=viewModelScope.launch {
-        appPrefStorage.setUserName(username)
-    }
-
 
     sealed class AuthEvent {
-        object ErrorInEmail : AuthEvent()
-        object ErrorInUserNameAndPassword : AuthEvent()
-        object ErrorInLoginOrSignUp : AuthEvent()
-        object ErrorInLoginPassword : AuthEvent()
+        object SetUserDataSuccess : AuthEvent()
     }
 }
