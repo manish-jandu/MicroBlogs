@@ -54,6 +54,17 @@ class AddEditArticleFragment : Fragment(R.layout.fragment_add_edit_article) {
         handleArticleEvents()
     }
 
+    private fun observeInternetConnection(slug: String?) {
+        connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) { it ->
+            addEditArticleViewModel.isInternetAvailable = it
+            it?.let {
+                if (slug != null && slug.isNotEmpty()) {
+                    getArticleData(slug)
+                }
+            }
+        }
+    }
+
     private fun getArticleData(slug: String) {
         addEditArticleViewModel.getArticleData(slug)
         addEditArticleViewModel.article.observe(viewLifecycleOwner) { response ->
@@ -79,17 +90,6 @@ class AddEditArticleFragment : Fragment(R.layout.fragment_add_edit_article) {
             editTextArticleAbout.editText!!.setText(article.description)
             editTextArticleBody.editText!!.setText(article.body)
             editTextArticleTags.editText!!.setText(tags ?: "")
-        }
-    }
-
-    private fun observeInternetConnection(slug: String?) {
-        connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) { it ->
-            addEditArticleViewModel.isInternetAvailable = it
-            it?.let {
-                if (slug != null && slug.isNotEmpty()) {
-                    getArticleData(slug)
-                }
-            }
         }
     }
 
@@ -126,7 +126,6 @@ class AddEditArticleFragment : Fragment(R.layout.fragment_add_edit_article) {
             }
         }
     }
-
 
     private fun submitArticle() {
         binding.apply {
