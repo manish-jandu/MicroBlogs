@@ -2,7 +2,6 @@ package com.scaler.microblogs.ui.editProfile
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,73 +10,91 @@ import com.google.android.material.snackbar.Snackbar
 import com.scaler.libconduit.models.User
 import com.scaler.microblogs.R
 import com.scaler.microblogs.databinding.FragmentEditProfileBinding
+import com.scaler.microblogs.utils.InternetConnectivity.ConnectivityManager
+import com.scaler.microblogs.utils.NetworkResult
 import com.scaler.microblogs.viewmodels.EditProfileViewModel
-import com.scaler.microblogs.viewmodels.EditProfileViewModel.EditProfileEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
-
     private val editProfileViewModel: EditProfileViewModel by viewModels()
     private var _binding: FragmentEditProfileBinding? = null
     private val binding get() = _binding!!
 
-    override fun onStart() {
-        super.onStart()
-        editProfileViewModel.getUserToken()
-    }
+    @Inject
+    lateinit var connectivityManager: ConnectivityManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentEditProfileBinding.bind(view)
 
+        setViewLoading()
+        observeInternetConnection()
+        observeUpdatedUserData()
+        observeEvents()
+
         binding.buttonSubmitEditedProfile.setOnClickListener {
             updateData()
         }
+    }
 
-        editProfileViewModel.currentUser.observe(viewLifecycleOwner) {
+    private fun observeInternetConnection() {
+        connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) { it ->
             it?.let {
-                setDataInFields(it)
+                editProfileViewModel.isInternetAvailable = it
+                observeCurrentUser()
             }
         }
+    }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            editProfileViewModel.editProfileEvent.collect { event ->
-                when (event) {
-                    is EditProfileEvent.ErrorLoadingData -> {
-                        findNavController().navigateUp()
-                        Toast.makeText(
-                            requireContext(),
-                            "Try again after logging in",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                    is EditProfileEvent.ErrorInUserNameAndPassword -> {
-                        showSnackBar("Please enter valid username and password")
-                    }
-                    is EditProfileEvent.ErrorInEmail -> {
-                        showSnackBar("Please enter valid email")
-                    }
-                    is EditProfileEvent.ErrorInUpdatingData -> {
-                        showSnackBar("Error while updating data try again!")
-                    }
-                    is EditProfileEvent.SuccessFullyUpdatedData -> {
-                        findNavController().navigateUp()
-                        Toast.makeText(
-                            requireContext(),
-                            "Successfully update data",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-
+    private fun observeCurrentUser() {
+        editProfileViewModel.getCurrentUser()
+        editProfileViewModel.currentUser.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Loading -> {
+                    setViewLoading()
+                }
+                is NetworkResult.Success -> {
+                    setViewCurrentUser()
+                    setDataInFields(response.data!!)
+                }
+                is NetworkResult.Error -> {
+                    setViewError(response.message)
                 }
             }
         }
     }
 
-    private fun showSnackBar(message: String) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
+    private fun observeUpdatedUserData() {
+        editProfileViewModel.updatedUser.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                    showLoading()
+                }
+                is NetworkResult.Success -> {
+                    hideLoading()
+                    editProfileViewModel.setUserDataInPreferences(result.data!!)
+                }
+                is NetworkResult.Error -> {
+                    hideLoading()
+                    showSnackBar(result.message.toString())
+                }
+            }
+        }
+    }
+
+    private fun observeEvents() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            editProfileViewModel.editProfileEvent.collect { event ->
+                when (event) {
+                    EditProfileViewModel.EditProfileEvent.Success -> {
+                        findNavController().navigateUp()
+                    }
+                }
+            }
+        }
     }
 
     private fun updateData() {
@@ -94,15 +111,55 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private fun setDataInFields(user: User) {
         binding.apply {
+            editTextEditUserName.editText!!.setText(user.username)
             editTextEditBio.editText!!.setText(user.bio ?: "")
             editTextEditEmail.editText!!.setText(user.email)
+
             if (user.image == null) {
                 editTextEditImageUrl.editText!!.setText("")
             } else {
                 editTextEditImageUrl.editText!!.setText(user.image.toString())
             }
-            editTextEditUserName.editText!!.setText(user.username)
         }
+    }
+
+    private fun setViewLoading() {
+        binding.apply {
+            groupCurrentUser.visibility = View.INVISIBLE
+            groupError.visibility = View.INVISIBLE
+            progressBar.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setViewError(message: String?) {
+        binding.apply {
+            textViewError.text = message
+            groupError.visibility = View.VISIBLE
+            groupCurrentUser.visibility = View.INVISIBLE
+            progressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setViewCurrentUser() {
+        binding.apply {
+            groupCurrentUser.visibility = View.VISIBLE
+            groupError.visibility = View.INVISIBLE
+            progressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun showLoading() {
+        binding.buttonSubmitEditedProfile.visibility = View.INVISIBLE
+        binding.progressBarButton.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding.buttonSubmitEditedProfile.visibility = View.VISIBLE
+        binding.progressBarButton.visibility = View.INVISIBLE
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
