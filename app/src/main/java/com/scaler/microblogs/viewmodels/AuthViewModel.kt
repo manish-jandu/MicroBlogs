@@ -47,6 +47,22 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun signUp(userName: String, email: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
+        _user.postValue(NetworkResult.Loading())
+        if(hasInternetConnection()){
+            try {
+                if(checkUserNameFormat(userName)&&checkEmailFormat(email)&&checkPasswordFormat(password)){
+                    val response = repo.remote.signup(userName,email,password)
+                    _user.postValue(handleSignupResponse(response))
+                }
+            }catch (e:Exception){
+                _user.postValue(NetworkResult.Error(e.message.toString()))
+            }
+        }else{
+            _user.postValue(NetworkResult.Error("No Internet Connection."))
+        }
+    }
+
     private fun handleLoginResponse(response: Response<UserResponse>): NetworkResult<User> {
         return when {
             response.message().contains("timeout") -> {
@@ -68,12 +84,49 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun checkPasswordFormat(password: String?): Boolean {
-        return if (password.isNullOrEmpty()) {
-            _user.postValue(NetworkResult.Error("Password cannot be empty."))
+    private fun handleSignupResponse(response: Response<UserResponse>): NetworkResult<User> {
+        return when {
+            response.message().contains("timeout") -> {
+                NetworkResult.Error("Timeout")
+            }
+            response.code() == 422 -> {
+                NetworkResult.Error("username or email already in use.")
+            }
+            response.body()?.user == null -> {
+                NetworkResult.Error("User not found")
+            }
+            response.isSuccessful -> {
+                val result = response.body()!!.user!!
+                NetworkResult.Success(result)
+            }
+            else -> {
+                NetworkResult.Error(response.message())
+            }
+        }
+    }
+
+    private fun checkUserNameFormat(userName:String):Boolean{
+        return  if(userName.isEmpty()){
+            _user.postValue(NetworkResult.Error("User Name cannot be empty."))
             false
-        } else {
+        }else{
             true
+        }
+    }
+
+    private fun checkPasswordFormat(password: String?): Boolean {
+        return when {
+            password.isNullOrEmpty() -> {
+                _user.postValue(NetworkResult.Error("Password cannot be empty."))
+                false
+            }
+            password.length<8 -> {
+                _user.postValue(NetworkResult.Error("Password should be min. 8 char."))
+                false
+            }
+            else -> {
+                true
+            }
         }
     }
 
