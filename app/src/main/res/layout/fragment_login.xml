@@ -6,7 +6,6 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="16dp"
-        android:paddingHorizontal="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.auth.LoginFragment">
@@ -38,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="@+id/edit_text_login_email"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/edit_text_login_email"
             app:layout_constraintTop_toBottomOf="@+id/edit_text_login_email">
 

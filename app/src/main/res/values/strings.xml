@@ -5,7 +5,7 @@
     <string name="title_account">Account</string>
     <string name="please_login_or_sign_up_to_continue">Please Login or Sign up to Continue</string>
     <string name="login">Login</string>
-    <string name="sign_up">Sign up</string>
+    <string name="sign_up">Signup</string>
     <string name="username">UserName</string>
     <string name="email_email_com">email@email.com</string>
     <string name="this_is_a_bio">This is a bio.</string>

@@ -64,7 +64,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
                 is NetworkResult.Error -> {
                     hideLoading()
-                    //pass message ="" if just want to hide loading
                     showSnackBar(result.message.toString())
                 }
             }
