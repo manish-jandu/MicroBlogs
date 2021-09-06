@@ -21,4 +21,7 @@
     <string name="title">Title</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="short_bio">Short Bio.</string>
+    <string name="image_url">Image url</string>
+    <string name="update">Update</string>
 </resources>

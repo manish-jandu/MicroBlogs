@@ -82,11 +82,11 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private fun updateData() {
         binding.apply {
-            val username = editTextEditUserName.text.toString().trim()
-            val bio = editTextEditBio.text.toString().trim()
-            val imageUrl = editTextEditImageUrl.text.toString().trim()
-            val email = editTextEditEmail.text.toString().trim()
-            val password = editTextEditPassword.text.toString().trim()
+            val username = editTextEditUserName.editText!!.text.toString().trim()
+            val bio = editTextEditBio.editText!!.text.toString().trim()
+            val imageUrl = editTextEditImageUrl.editText!!.text.toString().trim()
+            val email = editTextEditEmail.editText!!.text.toString().trim()
+            val password = editTextEditPassword.editText!!.text.toString().trim()
 
             editProfileViewModel.updateUserData(username, bio, imageUrl, email, password)
         }
@@ -94,14 +94,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private fun setDataInFields(user: User) {
         binding.apply {
-            editTextEditBio.setText(user.bio ?: "")
-            editTextEditEmail.setText(user.email)
+            editTextEditBio.editText!!.setText(user.bio ?: "")
+            editTextEditEmail.editText!!.setText(user.email)
             if (user.image == null) {
-                editTextEditImageUrl.setText("")
+                editTextEditImageUrl.editText!!.setText("")
             } else {
-                editTextEditImageUrl.setText(user.image.toString())
+                editTextEditImageUrl.editText!!.setText(user.image.toString())
             }
-            editTextEditUserName.setText(user.username)
+            editTextEditUserName.editText!!.setText(user.username)
         }
     }
 
