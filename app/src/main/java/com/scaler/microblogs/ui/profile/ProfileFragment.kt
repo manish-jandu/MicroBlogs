@@ -6,12 +6,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.scaler.libconduit.models.Profile
 import com.scaler.microblogs.R
+import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.adapters.viewpager.AccountViewPagerAdapter
 import com.scaler.microblogs.databinding.FragmentProfileBinding
 import com.scaler.microblogs.ui.favouritearticles.FavouriteArticlesFragment
@@ -222,10 +224,23 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val userArticleType = ArticleType.USER_CREATED_ARTICLE
         val fragments =
             arrayListOf(
-                UserArticlesFragment(userName, userArticleType),
-                FavouriteArticlesFragment(userName, userArticleType)
+                UserArticlesFragment(userName, userArticleType, OnArticleClick()),
+                FavouriteArticlesFragment(userName, userArticleType, OnArticleClick())
             )
         return AccountViewPagerAdapter(fragments, this)
+    }
+
+    inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
+        override fun onItemClick(slug: String, articleType: ArticleType) {
+            val action =
+                ProfileFragmentDirections.actionProfileFragmentToArticleFragment(articleType, slug)
+            findNavController().navigate(action)
+        }
+
+        override fun onProfileClick(userName: String) {
+            val action = ProfileFragmentDirections.actionProfileFragmentSelf(userName)
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroyView() {

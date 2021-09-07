@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.scaler.libconduit.models.User
 import com.scaler.microblogs.R
+import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.adapters.viewpager.AccountViewPagerAdapter
 import com.scaler.microblogs.databinding.FragmentAccountBinding
 import com.scaler.microblogs.ui.favouritearticles.FavouriteArticlesFragment
@@ -78,7 +79,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 if (currentStatus == CurrentUserStatus.LoggedIn) {
                     getUserName()
                     getCurrentUserData()
-                }else{
+                } else {
                     binding.viewPagerAccount.adapter = null
                 }
             }
@@ -196,11 +197,27 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     private fun getPagerAdapter(
         userName: String,
     ): AccountViewPagerAdapter {
-        val userArticleType  = ArticleType.USER_CREATED_ARTICLE
+        val userArticleType = ArticleType.USER_CREATED_ARTICLE
         val favArticleType = ArticleType.ARTICLE
         val fragments =
-            arrayListOf(UserArticlesFragment(userName,userArticleType), FavouriteArticlesFragment(userName, favArticleType))
+            arrayListOf(
+                UserArticlesFragment(userName, userArticleType, OnArticleClick()),
+                FavouriteArticlesFragment(userName, favArticleType, OnArticleClick())
+            )
         return AccountViewPagerAdapter(fragments, this)
+    }
+
+    inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
+        override fun onItemClick(slug: String, articleType: ArticleType) {
+            val action =
+                AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
+            findNavController().navigate(action)
+        }
+
+        override fun onProfileClick(userName: String) {
+            val action = AccountFragmentDirections.actionNavAccountToProfileFragment(userName)
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroyView() {

@@ -113,10 +113,10 @@
             android:id="@+id/profileFragment"
             android:name="com.scaler.microblogs.ui.profile.ProfileFragment"
             android:label="Profile"
-            tools:layout="@layout/fragment_profile" >
+            tools:layout="@layout/fragment_profile">
         <argument
-            app:argType="string"
-            android:name="userName"/>
+                android:name="userName"
+                app:argType="string" />
         <action
                 android:id="@+id/action_profileFragment_to_articleFragment"
                 app:destination="@id/articleFragment" />
