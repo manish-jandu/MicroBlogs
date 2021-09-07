@@ -9,9 +9,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import com.scaler.libconduit.models.Profile
 import com.scaler.microblogs.R
+import com.scaler.microblogs.adapters.viewpager.AccountViewPagerAdapter
 import com.scaler.microblogs.databinding.FragmentProfileBinding
+import com.scaler.microblogs.ui.favouritearticles.FavouriteArticlesFragment
+import com.scaler.microblogs.ui.userarticles.UserArticlesFragment
+import com.scaler.microblogs.utils.ArticleType
 import com.scaler.microblogs.utils.InternetConnectivity.ConnectivityManager
 import com.scaler.microblogs.utils.NetworkResult
 import com.scaler.microblogs.viewmodels.ProfileViewModel
@@ -43,6 +48,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         observeIfLoggedIn()
         observeProfile()
         observeProfileEvents()
+        setupTabsLayout(userName)
     }
 
     private fun observeInternetConnection() {
@@ -137,7 +143,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun setProfile(profile: Profile) {
         binding.apply {
             textViewUserName.text = profile.username
-            textViewUserBio.text = profile.bio ?: ""
+            textViewUserBio.text = profile.bio ?: "bio:"
             profile.following?.let { following ->
                 setIsFollowing(following)
                 setFollowUnfollowButtonText()
@@ -162,12 +168,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val isLoggedIn = profileViewModel.isLoggedIn.value
         val currentProfileHasData = profileViewModel.profile.value != null
 
-        if (isInternetAvailable != null && isLoggedIn != null){
-            if(!isInternetAvailable){
+        if (isInternetAvailable != null && isLoggedIn != null) {
+            if (!isInternetAvailable) {
                 setViewError()
-            }else if(currentProfileHasData) {
+            } else if (currentProfileHasData) {
                 setViewProfile()
-            }else{
+            } else {
                 setViewLoading()
             }
         }
@@ -196,6 +202,30 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             groupError.visibility = View.INVISIBLE
             progressBar.visibility = View.INVISIBLE
         }
+    }
+
+    private fun setupTabsLayout(userName: String) {
+        binding.viewPagerAccount.adapter = getPagerAdapter(userName)
+
+        val titles = arrayListOf("My Posts", "Favourites")
+        TabLayoutMediator(
+            binding.tabsLayoutCurrentUser,
+            binding.viewPagerAccount
+        ) { tab, position ->
+            tab.text = titles[position]
+        }.attach()
+    }
+
+    private fun getPagerAdapter(
+        userName: String,
+    ): AccountViewPagerAdapter {
+        val userArticleType = ArticleType.USER_CREATED_ARTICLE
+        val fragments =
+            arrayListOf(
+                UserArticlesFragment(userName, userArticleType),
+                FavouriteArticlesFragment(userName, userArticleType)
+            )
+        return AccountViewPagerAdapter(fragments, this)
     }
 
     override fun onDestroyView() {
