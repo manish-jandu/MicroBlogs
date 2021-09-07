@@ -24,6 +24,8 @@ class ProfileViewModel @Inject constructor(
     private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) : ViewModel() {
+    var isInternetAvailable: Boolean? = null
+
     private val _profile = MutableLiveData<NetworkResult<Profile>>()
     val profile: LiveData<NetworkResult<Profile>> = _profile
 
@@ -83,9 +85,9 @@ class ProfileViewModel @Inject constructor(
 
     fun followUnfollowAccount(userName: String, isFollowing: Boolean) {
         if (isFollowing) {
-            followAccount(userName)
-        } else {
             unFollowAccount(userName)
+        } else {
+            followAccount(userName)
         }
     }
 

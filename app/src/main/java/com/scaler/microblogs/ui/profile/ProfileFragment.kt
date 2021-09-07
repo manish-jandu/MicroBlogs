@@ -38,8 +38,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         _binding = FragmentProfileBinding.bind(view)
 
         userName = args.userName
-
+        setViewLoading()
         observeInternetConnection()
+        observeIfLoggedIn()
         observeProfile()
         observeProfileEvents()
     }
@@ -47,11 +48,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun observeInternetConnection() {
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) {
             it?.let { isInternetAvailable ->
-                if (isInternetAvailable) {
-                    observeIfLoggedIn()
-                } else {
-                    setViewError()
-                }
+                profileViewModel.isInternetAvailable = isInternetAvailable
+                setupView()
             }
         }
     }
@@ -157,6 +155,22 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun showSnackBar(message: String) {
         Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun setupView() {
+        val isInternetAvailable = profileViewModel.isInternetAvailable
+        val isLoggedIn = profileViewModel.isLoggedIn.value
+        val currentProfileHasData = profileViewModel.profile.value != null
+
+        if (isInternetAvailable != null && isLoggedIn != null){
+            if(!isInternetAvailable){
+                setViewError()
+            }else if(currentProfileHasData) {
+                setViewProfile()
+            }else{
+                setViewLoading()
+            }
+        }
     }
 
     private fun setViewError(message: String = "No Internet Connection.") {
