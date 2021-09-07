@@ -3,7 +3,7 @@ package com.scaler.microblogs.ui.userarticles
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,15 +12,18 @@ import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentUserArticlesBinding
 import com.scaler.microblogs.ui.account.AccountFragmentDirections
 import com.scaler.microblogs.utils.ArticleType
-import com.scaler.microblogs.viewmodels.AccountViewModel
+import com.scaler.microblogs.viewmodels.SharedFavUserArticlesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
-class UserArticlesFragment : Fragment(R.layout.fragment_user_articles) {
+@AndroidEntryPoint
+class UserArticlesFragment(private val userName: String, articleType: ArticleType) :
+    Fragment(R.layout.fragment_user_articles) {
     private var _binding: FragmentUserArticlesBinding? = null
     private val binding get() = _binding!!
-    private val accountViewModel: AccountViewModel by activityViewModels()
+    private val accountViewModel: SharedFavUserArticlesViewModel by viewModels()
     private val userArticleAdapter =
-        ArticleAdapter(OnArticleClick(), ArticleType.USER_CREATED_ARTICLE)
+        ArticleAdapter(OnArticleClick(), articleType)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,11 +34,7 @@ class UserArticlesFragment : Fragment(R.layout.fragment_user_articles) {
             layoutManager = LinearLayoutManager(requireContext())
         }
 
-        accountViewModel.userName.observe(viewLifecycleOwner) {
-            it?.let {
-                getUserArticles(it)
-            }
-        }
+        getUserArticles(userName)
     }
 
     private fun getUserArticles(userName: String) {
@@ -48,7 +47,8 @@ class UserArticlesFragment : Fragment(R.layout.fragment_user_articles) {
 
     inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
         override fun onItemClick(slug: String, articleType: ArticleType) {
-            val action = AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
+            val action =
+                AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
             findNavController().navigate(action)
         }
 

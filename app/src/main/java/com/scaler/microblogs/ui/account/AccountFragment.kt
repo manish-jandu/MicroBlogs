@@ -14,6 +14,7 @@ import com.scaler.microblogs.adapters.viewpager.AccountViewPagerAdapter
 import com.scaler.microblogs.databinding.FragmentAccountBinding
 import com.scaler.microblogs.ui.favouritearticles.FavouriteArticlesFragment
 import com.scaler.microblogs.ui.userarticles.UserArticlesFragment
+import com.scaler.microblogs.utils.ArticleType
 import com.scaler.microblogs.utils.CurrentUserStatus
 import com.scaler.microblogs.utils.InternetConnectivity.ConnectivityManager
 import com.scaler.microblogs.utils.NetworkResult
@@ -36,7 +37,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
         setViewLoading()
         setupButtons()
-        setupTabsLayout()
         observeInternetConnection()
         observeCurrentUserStatus()
     }
@@ -78,6 +78,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 if (currentStatus == CurrentUserStatus.LoggedIn) {
                     getUserName()
                     getCurrentUserData()
+                }else{
+                    binding.viewPagerAccount.adapter = null
                 }
             }
         }
@@ -122,6 +124,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
     private fun getUserName() {
         accountViewModel.getUserName()
+        accountViewModel.userName.observe(viewLifecycleOwner) {
+            it?.let {
+                setupTabsLayout(it)
+            }
+        }
     }
 
     private fun setCurrentUserData(user: User) {
@@ -174,8 +181,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         }
     }
 
-    private fun setupTabsLayout() {
-        binding.viewPagerAccount.adapter = getPagerAdapter()
+    private fun setupTabsLayout(userName: String) {
+        binding.viewPagerAccount.adapter = getPagerAdapter(userName)
 
         val titles = arrayListOf("My Posts", "Favourites")
         TabLayoutMediator(
@@ -186,13 +193,19 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         }.attach()
     }
 
-    private fun getPagerAdapter(): AccountViewPagerAdapter {
-        val fragments = arrayListOf(UserArticlesFragment(), FavouriteArticlesFragment())
+    private fun getPagerAdapter(
+        userName: String,
+    ): AccountViewPagerAdapter {
+        val userArticleType  = ArticleType.USER_CREATED_ARTICLE
+        val favArticleType = ArticleType.ARTICLE
+        val fragments =
+            arrayListOf(UserArticlesFragment(userName,userArticleType), FavouriteArticlesFragment(userName, favArticleType))
         return AccountViewPagerAdapter(fragments, this)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.viewPagerAccount.adapter = null
         _binding = null
     }
 }

@@ -3,7 +3,7 @@ package com.scaler.microblogs.ui.favouritearticles
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
@@ -14,14 +14,17 @@ import com.scaler.microblogs.adapters.ArticleAdapter
 import com.scaler.microblogs.databinding.FragmentFavouriteArticlesBinding
 import com.scaler.microblogs.ui.account.AccountFragmentDirections
 import com.scaler.microblogs.utils.ArticleType
-import com.scaler.microblogs.viewmodels.AccountViewModel
+import com.scaler.microblogs.viewmodels.SharedFavUserArticlesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
-class FavouriteArticlesFragment : Fragment(R.layout.fragment_favourite_articles) {
+@AndroidEntryPoint
+class FavouriteArticlesFragment(private val userName: String, articleType: ArticleType) :
+    Fragment(R.layout.fragment_favourite_articles) {
     private var _binding: FragmentFavouriteArticlesBinding? = null
     private val binding get() = _binding!!
-    private val accountViewModel: AccountViewModel by activityViewModels()
-    private val favouriteArticlesAdapter = ArticleAdapter(OnArticleClick(), ArticleType.ARTICLE)
+    private val accountViewModel: SharedFavUserArticlesViewModel by viewModels()
+    private val favouriteArticlesAdapter = ArticleAdapter(OnArticleClick(), articleType)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,12 +34,7 @@ class FavouriteArticlesFragment : Fragment(R.layout.fragment_favourite_articles)
             adapter = favouriteArticlesAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-
-        accountViewModel.userName.observe(viewLifecycleOwner) {
-            it?.let {
-                getFavouriteArticles(it)
-            }
-        }
+        getFavouriteArticles(userName)
 
     }
 
@@ -50,7 +48,8 @@ class FavouriteArticlesFragment : Fragment(R.layout.fragment_favourite_articles)
 
     inner class OnArticleClick() : ArticleAdapter.OnArticleClick {
         override fun onItemClick(slug: String, articleType: ArticleType) {
-            val action = AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
+            val action =
+                AccountFragmentDirections.actionNavAccountToArticleFragment(articleType, slug)
             findNavController().navigate(action)
         }
 

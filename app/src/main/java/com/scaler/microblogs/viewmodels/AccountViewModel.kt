@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
 import com.scaler.libconduit.models.User
 import com.scaler.libconduit.responses.UserResponse
 import com.scaler.microblogs.data.AppPrefStorage
@@ -60,12 +59,6 @@ class AccountViewModel @Inject constructor(
     fun getUserName() {
         _userName.postValue(appPrefStorage.getUserName())
     }
-
-    fun getUserFavouriteArticle(userName: String) =
-        repo.remote.getFeedByUserFavourite(userName).cachedIn(viewModelScope)
-
-    fun getUserArticles(userName: String) =
-        repo.remote.getFeedByUserName(userName).cachedIn(viewModelScope)
 
     fun signOut() {
         appPrefStorage.deleteToken()
