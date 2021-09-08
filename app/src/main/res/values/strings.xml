@@ -25,4 +25,5 @@
     <string name="image_url">Image url</string>
     <string name="update">Update</string>
     <string name="follow">Follow</string>
+    <string name="floating_button_to_add_new_article">floating button to add new article</string>
 </resources>

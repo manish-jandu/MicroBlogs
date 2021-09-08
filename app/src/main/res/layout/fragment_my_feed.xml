@@ -2,61 +2,26 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
-        tools:context=".ui.feed.FeedFragment">
+        tools:context=".ui.feed.MyFeedFragment">
 
-    <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:constraint_referenced_ids="image_view_error,text_view_error" />
-
-    <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_show_feed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:constraint_referenced_ids="tabs_layout,view_pager_account,floating_button_add_article" />
-
-    <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs_layout"
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_my_feed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager_account"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabs_layout"
-            app:layout_constraintVertical_bias="1.0" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_button_add_article"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="@drawable/ic_add"
-            android:contentDescription="@string/floating_button_to_add_new_article"
-            android:layout_marginEnd="40dp"
-            android:layout_marginBottom="30dp"
-            app:backgroundTint="@color/design_default_color_primary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -89,5 +54,6 @@
             app:layout_constraintEnd_toEndOf="@+id/image_view_error"
             app:layout_constraintStart_toStartOf="@+id/image_view_error"
             app:layout_constraintTop_toBottomOf="@+id/image_view_error" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

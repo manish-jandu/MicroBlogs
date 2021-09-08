@@ -1,5 +1,6 @@
 package com.scaler.microblogs.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +13,6 @@ import com.scaler.microblogs.di.AuthModule
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +20,11 @@ class FeedViewModel @Inject constructor(
     private val repo: Repository,
     private val appPrefStorage: AppPrefStorage
 ) : ViewModel() {
+    var isInternetAvailable: Boolean? = null
+
+    private val _isLoggedIn = MutableLiveData<Boolean>()
+    val isLoggedIn: LiveData<Boolean> = _isLoggedIn
+
     private val _currentArticles = MutableLiveData<PagingData<Article>>()
 
     private val feedEventChannel = Channel<FeedEvent>()
@@ -28,13 +33,13 @@ class FeedViewModel @Inject constructor(
     val globalArticles = repo.remote.getFeeds().cachedIn(viewModelScope)
     val feedArticles = repo.authRemote.getCurrentUseFeed().cachedIn(viewModelScope)
 
-    fun getUserToken() = viewModelScope.launch {
+    fun updateCurrentUserStatus() {
         val token = appPrefStorage.getUserToken()
         if (token.isNullOrEmpty()) {
-            feedEventChannel.send(FeedEvent.LoggedOut)
+            _isLoggedIn.postValue(false)
         } else {
             AuthModule.authToken = token
-            feedEventChannel.send(FeedEvent.LoggedIn)
+            _isLoggedIn.postValue(true)
         }
     }
 
