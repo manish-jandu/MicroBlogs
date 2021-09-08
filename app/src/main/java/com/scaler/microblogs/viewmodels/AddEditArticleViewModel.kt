@@ -29,9 +29,6 @@ class AddEditArticleViewModel @Inject constructor(
     private val _article = MutableLiveData<NetworkResult<Article>>()
     val article: LiveData<NetworkResult<Article>> = _article
 
-    private val _createdArticle = MutableLiveData<NetworkResult<SingleArticleResponse>>()
-    val createdArticle: LiveData<NetworkResult<SingleArticleResponse>> = _createdArticle
-
     private val addEditArticleChannel = Channel<AddEditArticleEvent>()
     val addEditArticleEvent = addEditArticleChannel.receiveAsFlow()
 
@@ -92,7 +89,7 @@ class AddEditArticleViewModel @Inject constructor(
         }
     }
 
-    private fun handleArticleResponse(response: Response<SingleArticleResponse>): NetworkResult<Article>? {
+    private fun handleArticleResponse(response: Response<SingleArticleResponse>): NetworkResult<Article> {
         return when {
             response.message().contains("timeout") -> {
                 NetworkResult.Error("Timeout")

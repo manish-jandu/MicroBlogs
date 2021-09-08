@@ -1,114 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:padding="16dp"
         tools:context=".ui.article.ArticleFragment">
 
-    <Button
-            android:id="@+id/button_edit_article"
-            android:text="Edit"
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_show_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button_delete_article"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:constraint_referenced_ids="text_view_error,image_view_error"/>
 
-    <Button
-            android:id="@+id/button_delete_article"
-            android:text="Delete"
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_show_article"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/button_edit_article"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:constraint_referenced_ids="text_view_title,text_view_body,edit_text_comment,button_comment,image_like_unlike"/>
 
-    <TextView
-            android:id="@+id/text_view_title"
-            android:text=""
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="16dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:textStyle="bold"
-            android:layout_marginTop="34dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_edit_article" />
+            android:layout_height="wrap_content">
 
-    <TextView
-            android:id="@+id/text_view_body"
-            android:text=""
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="16dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+        <!--
+            <Button
+                    android:id="@+id/button_edit_article"
+                    android:text="Edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/button_delete_article"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_comments"
-            android:layout_marginVertical="10dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/edit_text_comment"
-            app:layout_constraintTop_toBottomOf="@+id/view_like_button"
-            tools:layout_editor_absoluteX="36dp" />
+            <Button
+                    android:id="@+id/button_delete_article"
+                    android:text="Delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toStartOf="@+id/button_edit_article"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+        -->
+        <TextView
+                android:id="@+id/text_view_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/dummy_article_title" />
 
-    <EditText
-            android:id="@+id/edit_text_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Comment"
-            android:layout_marginHorizontal="4dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/button_comment"
-            app:layout_constraintEnd_toStartOf="@+id/button_comment"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-            android:id="@+id/button_comment"
-            android:text="Comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="28dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    <LinearLayout
-            android:id="@+id/view_like_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:gravity="center"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_body"
-            app:layout_constraintVertical_bias="0.705">
+        <TextView
+                android:id="@+id/text_view_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_title"
+                tools:text="@string/dummy_article_body" />
 
         <ImageView
                 android:id="@+id/image_like_unlike"
-                android:layout_width="24dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_unliked" />
-    </LinearLayout>
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_unliked"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="4dp"
+                android:contentDescription="@string/icon_to_like_unlike_a_article"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_body" />
 
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_comments"
+                android:layout_marginVertical="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/edit_text_comment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_like_unlike" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+                android:id="@+id/edit_text_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/comment"
+                android:inputType="text"
+                android:layout_marginHorizontal="4dp"
+                android:minHeight="48dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/button_comment"
+                app:layout_constraintEnd_toStartOf="@+id/button_comment"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+                android:id="@+id/button_comment"
+                android:text="@string/comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+                android:id="@+id/image_view_error"
+                android:src="@drawable/ic_sad"
+                android:layout_width="70dp"
+                android:contentDescription="@string/error_image"
+                android:layout_height="70dp"
+                android:alpha="0.8"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.32999998" />
+
+        <TextView
+                android:id="@+id/text_view_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.8"
+                android:layout_marginTop="12dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="@+id/image_view_error"
+                app:layout_constraintStart_toStartOf="@+id/image_view_error"
+                app:layout_constraintTop_toBottomOf="@+id/image_view_error" />
+
+        <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

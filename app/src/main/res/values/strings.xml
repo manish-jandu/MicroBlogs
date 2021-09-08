@@ -26,4 +26,8 @@
     <string name="update">Update</string>
     <string name="follow">Follow</string>
     <string name="floating_button_to_add_new_article">floating button to add new article</string>
+    <string name="dummy_article_title">This is a title of a article.</string>
+    <string name="dummy_article_body">This is a body of the article,this is a body of a article,this is a body of a article,this is a body of a article,this is a body of a article,this is a body of a article,this is a body of a article</string>
+    <string name="comment">Comment</string>
+    <string name="icon_to_like_unlike_a_article">icon to like unlike a article</string>
 </resources>
