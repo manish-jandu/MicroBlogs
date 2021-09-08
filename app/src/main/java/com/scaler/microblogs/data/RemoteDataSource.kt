@@ -82,5 +82,5 @@ class RemoteDataSource @Inject constructor(
                     api,
                 )
             }
-        ).liveData
+        ).flow
 }

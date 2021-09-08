@@ -2,7 +2,6 @@ package com.scaler.microblogs.data
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.liveData
 import com.scaler.libconduit.requests.*
 import com.scaler.microblogs.adapters.pagingadapters.CurrentUserFeedPagingSource
 import com.scaler.microblogs.di.AuthModule
@@ -56,5 +55,5 @@ class AuthRemoteDataSource() {
                 authApi,
             )
         }
-    ).liveData
+    ).flow
 }
