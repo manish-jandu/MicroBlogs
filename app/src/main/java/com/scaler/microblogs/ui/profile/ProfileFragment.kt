@@ -221,11 +221,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun getPagerAdapter(
         userName: String,
     ): AccountViewPagerAdapter {
-        val userArticleType = ArticleType.USER_CREATED_ARTICLE
+        val articleType = ArticleType.ARTICLE
         val fragments =
             arrayListOf(
-                UserArticlesFragment(userName, userArticleType, OnArticleClick()),
-                FavouriteArticlesFragment(userName, userArticleType, OnArticleClick())
+                UserArticlesFragment(userName, articleType, OnArticleClick()),
+                FavouriteArticlesFragment(userName, articleType, OnArticleClick())
             )
         return AccountViewPagerAdapter(fragments, this)
     }
