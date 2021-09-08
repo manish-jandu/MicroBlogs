@@ -2,7 +2,6 @@ package com.scaler.microblogs.data
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.liveData
 import com.scaler.libconduit.apis.ConduitApi
 import com.scaler.libconduit.requests.UserLoginData
 import com.scaler.libconduit.requests.UserLoginRequest
@@ -40,7 +39,7 @@ class RemoteDataSource @Inject constructor(
         pagingSourceFactory = {
             TagsFeedPagingSource(api, tag)
         }
-    ).liveData
+    ).flow
 
     fun getFeedByUserName(userName: String) = Pager(
         config = PagingConfig(
