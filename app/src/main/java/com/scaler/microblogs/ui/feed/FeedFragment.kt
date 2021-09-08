@@ -91,9 +91,11 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         return AccountViewPagerAdapter(fragments, this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         binding.viewPagerAccount.adapter = null
         _binding = null
     }
+
+
 }
