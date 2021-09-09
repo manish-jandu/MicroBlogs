@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.scaler.libconduit.models.Article
@@ -54,6 +55,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         articleType = args.articleType
         slug = args.slug
 
+        setupRecyclerView()
         setButtonClickListener()
         observeIfLoggedIn()
         observeArticleData()
@@ -63,6 +65,13 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
 
         if (articleType == ArticleType.USER_CREATED_ARTICLE) {
             setHasOptionsMenu(true)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerViewComments.apply {
+            adapter = commentAdapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
