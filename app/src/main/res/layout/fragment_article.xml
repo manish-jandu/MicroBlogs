@@ -25,32 +25,6 @@
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids="text_view_title,text_view_body,edit_text_comment,button_comment,image_like_unlike,recycler_view_comments" />
 
-
-        <!--
-            <Button
-                    android:id="@+id/button_edit_article"
-                    android:text="Edit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/button_delete_article"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                    android:id="@+id/button_delete_article"
-                    android:text="Delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toStartOf="@+id/button_edit_article"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-        -->
         <TextView
                 android:id="@+id/text_view_title"
                 android:layout_width="match_parent"

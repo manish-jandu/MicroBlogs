@@ -1,6 +1,9 @@
 package com.scaler.microblogs.ui.article
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -284,7 +287,26 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         binding.progressBar.visibility = View.GONE
     }
 
-    private fun showDialog(slug: String) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.article_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.button_edit_article -> {
+                val action =
+                    ArticleFragmentDirections.actionArticleFragmentToAddEditArticleFragment(slug)
+                findNavController().navigate(action)
+            }
+            R.id.button_delete_article -> {
+                showDeleteDialog(slug)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDeleteDialog(slug: String) {
         AlertDialog.Builder(requireContext())
             .setTitle("Alert!")
             .setMessage("Do you really want to delete this Article")
