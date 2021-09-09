@@ -8,23 +8,23 @@
         android:padding="16dp"
         tools:context=".ui.article.ArticleFragment">
 
-    <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_show_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="text_view_error,image_view_error"/>
-
-    <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_show_article"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="text_view_title,text_view_body,edit_text_comment,button_comment,image_like_unlike"/>
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Group
+                android:id="@+id/group_show_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="text_view_error,image_view_error"/>
+
+        <androidx.constraintlayout.widget.Group
+                android:id="@+id/group_show_article"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="text_view_title,text_view_body,edit_text_comment,button_comment,image_like_unlike"/>
+
 
         <!--
             <Button
@@ -77,8 +77,8 @@
 
         <ImageView
                 android:id="@+id/image_like_unlike"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:background="@drawable/ic_unliked"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="4dp"

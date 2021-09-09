@@ -57,6 +57,7 @@ class ArticleViewModel @Inject constructor(
     }
 
     fun getArticleDataByRepo(slug: String) = viewModelScope.launch(Dispatchers.IO) {
+        _article.postValue(NetworkResult.Loading())
         if (hasInternetConnection()) {
             try {
                 val result = repo.remote.getArticleBySlug(slug)
@@ -70,6 +71,7 @@ class ArticleViewModel @Inject constructor(
     }
 
     fun getArticleDataByAuthRepo(slug: String) = viewModelScope.launch(Dispatchers.IO) {
+        _article.postValue(NetworkResult.Loading())
         if (hasInternetConnection()) {
             try {
                 val result = repo.authRemote.getArticleBySlug(slug)
@@ -157,8 +159,8 @@ class ArticleViewModel @Inject constructor(
     fun likeArticle(slug: String) = viewModelScope.launch {
         try {
             val result = repo.authRemote.likeArticle(slug)
-            if (result.isSuccessful) {
-                _article.postValue(NetworkResult.Success(result.body()!!))
+            if (!result.isSuccessful) {
+                articleEventChannel.send(ArticleEvent.Error("something went wrong."))
             }
         } catch (e: Exception) {
             Log.i(TAG, e.message.toString())
@@ -168,8 +170,8 @@ class ArticleViewModel @Inject constructor(
     fun unlikeArticle(slug: String) = viewModelScope.launch {
         try {
             val result = repo.authRemote.unlikeArticle(slug)
-            if (result.isSuccessful) {
-                _article.postValue(NetworkResult.Success(result.body()!!))
+            if (!result.isSuccessful) {
+                articleEventChannel.send(ArticleEvent.Error("something went wrong."))
             }
         } catch (e: Exception) {
             Log.i(TAG, e.message.toString())
@@ -185,5 +187,6 @@ class ArticleViewModel @Inject constructor(
 
     sealed class ArticleEvent {
         data class Error(val errorMessage: String) : ArticleEvent()
+        data class ErrorLikeUnlike(val errorMessage: String) : ArticleEvent()
     }
 }

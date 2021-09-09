@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -22,6 +23,7 @@ import com.scaler.microblogs.utils.InternetConnectivity.ConnectivityManager
 import com.scaler.microblogs.utils.NetworkResult
 import com.scaler.microblogs.viewmodels.ArticleViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 private const val TAG = "ArticleFragment"
@@ -57,6 +59,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         observeArticleData()
         observeCommentsData()
         observeResult()
+        observeEvents()
 
         if (articleType == ArticleType.USER_CREATED_ARTICLE) {
             setHasOptionsMenu(true)
@@ -64,6 +67,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
     }
 
     private fun observeInternetConnection() {
+        articleViewModel.isInternetAvailable = connectivityManager.isNetworkAvailable.value
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) {
             it?.let {
                 setupArticleView()
@@ -115,8 +119,8 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
     private fun observeCommentsData() {
         articleViewModel.getComments(slug)
         articleViewModel.comments.observe(viewLifecycleOwner) {
-            it?.let {response->
-                when(response){
+            it?.let { response ->
+                when (response) {
                     is NetworkResult.Error -> {
                         hideLoading()
                         showSnackBar(response.message.toString())
@@ -176,6 +180,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                 } else {
                     articleViewModel.likeArticle(slug)
                 }
+                toggleFavourite()
             }
             binding.buttonComment.setOnClickListener {
                 createComment(slug)
@@ -202,6 +207,27 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                 articleViewModel.createComment(slug, comment)
             }
         }
+    }
+
+    private fun observeEvents() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            articleViewModel.articleEvent.collect { event ->
+                when (event) {
+                    is ArticleViewModel.ArticleEvent.Error -> {
+                        showSnackBar(event.errorMessage)
+                    }
+                    is ArticleViewModel.ArticleEvent.ErrorLikeUnlike -> {
+                        showSnackBar(event.errorMessage)
+                        toggleFavourite()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun toggleFavourite() {
+        isFavourite = !isFavourite
+        setFavouriteIcon()
     }
 
     private fun setupArticleView() {
@@ -237,15 +263,15 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         }
     }
 
-    private fun showSnackBar(message:String){
-        Snackbar.make(requireView(),message,Snackbar.LENGTH_SHORT).show()
+    private fun showSnackBar(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun showLoading(){
+    private fun showLoading() {
         binding.progressBar.visibility = View.VISIBLE
     }
 
-    private fun hideLoading(){
+    private fun hideLoading() {
         binding.progressBar.visibility = View.GONE
     }
 
