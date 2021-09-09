@@ -31,6 +31,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     }
 
     private fun observeInternet() {
+        isInternetAvailable = connectivityManager.isNetworkAvailable.value
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) { it ->
             it?.let {
                 isInternetAvailable = it

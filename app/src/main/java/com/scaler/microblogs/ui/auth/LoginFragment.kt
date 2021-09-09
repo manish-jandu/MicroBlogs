@@ -47,6 +47,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun observeInternetConnection() {
+        viewModel.isInternetAvailable= connectivityManager.isNetworkAvailable.value
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) {
             viewModel.isInternetAvailable = it
         }

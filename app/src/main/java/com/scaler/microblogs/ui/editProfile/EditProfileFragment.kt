@@ -41,6 +41,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     }
 
     private fun observeInternetConnection() {
+        editProfileViewModel.isInternetAvailable= connectivityManager.isNetworkAvailable.value
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) { it ->
             it?.let {
                 editProfileViewModel.isInternetAvailable = it

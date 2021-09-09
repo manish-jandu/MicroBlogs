@@ -55,6 +55,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
     }
 
     private fun observeInternetConnection() {
+        viewModel.isInternetAvailable = connectivityManager.isNetworkAvailable.value
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) {
             viewModel.isInternetAvailable = it
         }

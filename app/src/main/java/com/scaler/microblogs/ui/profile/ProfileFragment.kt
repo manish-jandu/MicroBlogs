@@ -54,6 +54,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun observeInternetConnection() {
+        profileViewModel.isInternetAvailable = connectivityManager.isNetworkAvailable.value
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) {
             it?.let { isInternetAvailable ->
                 profileViewModel.isInternetAvailable = isInternetAvailable

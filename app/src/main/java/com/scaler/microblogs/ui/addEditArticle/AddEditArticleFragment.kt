@@ -55,6 +55,7 @@ class AddEditArticleFragment : Fragment(R.layout.fragment_add_edit_article) {
     }
 
     private fun observeInternetConnection(slug: String?) {
+        addEditArticleViewModel.isInternetAvailable = connectivityManager.isNetworkAvailable.value
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) { it ->
             addEditArticleViewModel.isInternetAvailable = it
             it?.let {

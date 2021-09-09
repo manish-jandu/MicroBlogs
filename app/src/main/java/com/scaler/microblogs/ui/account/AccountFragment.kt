@@ -63,6 +63,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     }
 
     private fun observeInternetConnection() {
+        accountViewModel.isInternetAvailable = connectivityManager.isNetworkAvailable.value
         connectivityManager.isNetworkAvailable.observe(viewLifecycleOwner) { it ->
             it?.let {
                 accountViewModel.isInternetAvailable = it
