@@ -37,33 +37,45 @@ the [RealWorld](https://github.com/gothinkster/realworld) repo.
   ----------------------------------------------------------------------------------------------------------------------------------------------------
     App                                 # Root UI
     ├── adapters                        # Different Adapters
-        ├── paging adapters             # paginng adapters
-        ├── viewpaging                  # viewpager adapter
-        |-- recyclerviewAdapters        # recycler view adapters
+    |   ├── paging adapters             # paginng adapters
+    |   ├── viewpaging                  # viewpager adapter
+    |   |-- recyclerviewAdapters        # recycler view adapters
     |
     ├── data                            # For data handling
-        |-- repo                        # Repository with different sources
+    |   |-- repo                        # Repository with different sources
     |
     ├── di                              # Hilt di modules
     |
     ├── ui                              # Fragments
-        ├── account
-        ├── addEditArticle
-        ├── article
-        ├── auth
-        ├── editArticle
-        ├── favouriteArticle
-        ├── feed
-        ├── profile
-        ├── tags
-        ├── tagsFeed
-        ├── userArticles
+    |   ├── account
+    |   ├── addEditArticle
+    |   ├── article
+    |   ├── auth
+    |   ├── editArticle
+    |   ├── favouriteArticle
+    |   ├── feed
+    |   ├── profile
+    |   ├── tags
+    |   ├── tagsFeed
+    |   ├── userArticles
     |
     ├── uitls                           # Util file like constants, genric result classes
-        ├── internet connectivity       # Monitor internet connectivity using live data
+    |   ├── internet connectivity       # Monitor internet connectivity using live data
     ├── view models                     # viewmodels
  
     
- ## Demo
-  video - [youtube](https://youtu.be/ATFkS2dUVoY)
-  app - []
+## Demo
+ - video - [youtube](https://www.youtube.com/watch?v=Ylq7Hi07oVs)
+ - Drive - [Apk](https://drive.google.com/drive/folders/18BaoM2eH99Tu3WJp6uaiYGaB7loVeLX7?usp=sharing)
+  
+## Screen 
+
+ <div >
+  <img src="Demo/1.jpg" width="200" height="400"/>
+  <img src="Demo/2.jpg" width="200" height="400"/> 
+  <img src="Demo/3.jpg" width="200" height="400"/>
+  <img src="Demo/4.jpg" width="200" height="400"/> 
+  <img src="Demo/5.jpg" width="200" height="400"/>
+  <img src="Demo/6.jpg" width="200" height="400"/>
+  <img src="Demo/7.jpg" width="200" height="400"/>
+ </div>
